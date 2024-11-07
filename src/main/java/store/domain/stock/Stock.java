@@ -20,4 +20,8 @@ public class Stock {
         }
         this.quantity -= quantity;
     }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }
