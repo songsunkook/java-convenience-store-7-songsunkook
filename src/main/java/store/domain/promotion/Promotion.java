@@ -23,4 +23,8 @@ public class Promotion {
         // TODO: 종료일이 포함되는지 확인하기
         return now.isAfter(startDate.atStartOfDay()) && now.isBefore(endDate.atStartOfDay());
     }
+
+    public int bonus(int buy) {
+        return buy / this.buy * get;
+    }
 }
