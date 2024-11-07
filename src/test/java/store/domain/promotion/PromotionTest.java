@@ -43,11 +43,16 @@ class PromotionTest {
         assertThat(stock.getQuantity()).isEqualTo(10 - 3);
         assertThat(stock2.getQuantity()).isEqualTo(10);
     }
-/*
 
     @Test
     void 프로모션_재고가_부족할_경우_일반_재고를_사용한다() {
-
+        Promotion promotion = new Promotion("탄산2+1", 2, 1, LocalDate.of(2024, 01, 01), LocalDate.of(2024, 12, 31));
+        Stock stock = new Stock("콜라", 1000, 0, promotion);
+        Stock stock2 = new Stock("콜라", 1000, 10, null);
+        Store store = new Store();
+        store.addStock(stock);
+        store.addStock(stock2);
+        store.buy("콜라", 3);
+        assertThat(stock2.getQuantity()).isEqualTo(10 - 3);
     }
-*/
 }

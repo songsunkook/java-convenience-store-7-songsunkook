@@ -23,7 +23,21 @@ public class Store {
             .filter(Stock::isPromotioning)
             .findAny();
 
+        List<Stock> notPromotionings = targets.stream()
+            .filter(stock -> !stock.isPromotioning())
+            .toList();
+
         if (promotioning.isPresent()) {
+            Stock target = promotioning.get();
+            if (target.getQuantity() < quantity) {
+                if (notPromotionings.isEmpty() ||
+                    notPromotionings.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
+                    throw new IllegalArgumentException("[ERROR] 재고부족");
+                }
+                // 프로모션중이지 않은 상품이 여럿이면 합해서 buy할 수 있어야 함. 요구사항도 다시 확인해볼것
+                notPromotionings.get(0).buy(quantity);
+                return;
+            }
             promotioning.get().buy(quantity);
             return;
         }

@@ -42,6 +42,9 @@ public class Stock {
     }
 
     public boolean isPromotioning() {
+        if (promotion == null) {
+            return false;
+        }
         return promotion.inProgress(DateTimes.now());
     }
 }
