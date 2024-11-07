@@ -1,5 +1,8 @@
 package store.domain.stock;
 
+import java.util.Objects;
+
+import camp.nextstep.edu.missionutils.DateTimes;
 import store.domain.promotion.Promotion;
 
 public class Stock {
@@ -32,5 +35,13 @@ public class Stock {
 
     public int bonus() {
         return promotion.bonus(buyQuantity);
+    }
+
+    public boolean equalsName(String name) {
+        return Objects.equals(this.name, name);
+    }
+
+    public boolean isPromotioning() {
+        return promotion.inProgress(DateTimes.now());
     }
 }
