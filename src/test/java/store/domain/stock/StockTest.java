@@ -1,4 +1,4 @@
-package store.stock;
+package store.domain.stock;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
