@@ -47,4 +47,16 @@ public class Stock {
         }
         return promotion.inProgress(DateTimes.now());
     }
+
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public int canBonusIfMoreQuantity(int buyQuantity) {
+        // 제공 가능하다면
+        if (quantity >= promotion.buyAndGet()) {
+            return promotion.getBuy() - buyQuantity;
+        }
+        return -1;
+    }
 }

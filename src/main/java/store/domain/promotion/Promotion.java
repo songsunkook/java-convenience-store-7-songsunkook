@@ -27,4 +27,12 @@ public class Promotion {
     public int bonus(int buy) {
         return buy / this.buy * get;
     }
+
+    public int buyAndGet() {
+        return buy + get;
+    }
+
+    public int getBuy() {
+        return buy;
+    }
 }

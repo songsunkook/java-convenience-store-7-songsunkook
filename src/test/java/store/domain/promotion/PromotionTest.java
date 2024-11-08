@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import camp.nextstep.edu.missionutils.DateTimes;
+import store.domain.Customer;
+import store.domain.NoticeType;
 import store.domain.stock.Stock;
 import store.domain.store.Store;
 
@@ -39,7 +41,8 @@ class PromotionTest {
         Store store = new Store();
         store.addStock(stock);
         store.addStock(stock2);
-        store.buy("콜라", 3);
+        Customer customer = new Customer();
+        store.buy(customer, "콜라", 3);
         assertThat(stock.getQuantity()).isEqualTo(10 - 3);
         assertThat(stock2.getQuantity()).isEqualTo(10);
     }
@@ -52,7 +55,23 @@ class PromotionTest {
         Store store = new Store();
         store.addStock(stock);
         store.addStock(stock2);
-        store.buy("콜라", 3);
+        Customer customer = new Customer();
+        store.buy(customer, "콜라", 3);
         assertThat(stock2.getQuantity()).isEqualTo(10 - 3);
+    }
+
+    @Test
+    void 프로모션_적용_대상_상품보다_고객_수량이_적으면_혜택받을_수_있음을_안내한다() {
+        Promotion promotion = new Promotion("탄산2+1", 2, 1, LocalDate.of(2024, 01, 01), LocalDate.of(2024, 12, 31));
+        Stock stock = new Stock("콜라", 1000, 10, promotion);
+        Store store = new Store();
+        store.addStock(stock);
+        Customer customer = new Customer();
+        store.buy(customer, "콜라", 1);
+        assertThat(customer.getNotices().size()).isEqualTo(1);
+        assertThat(customer.getNotices().get(0).type()).isEqualTo(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY);
+
+        // 구입확정 로직. 나중에 필요할 곳이 있을 것
+        // customer.answer(new Notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, stock, 0));
     }
 }
