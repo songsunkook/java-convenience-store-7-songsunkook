@@ -43,6 +43,9 @@ public class Customer {
             .mapToInt(Order::price)
             .sum();
         if (membership) {
+            if (totalCost * 0.3 >= 8000) {
+                return totalCost - 8000;
+            }
             return (int)(totalCost * 0.7);
         }
         return totalCost;

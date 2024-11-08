@@ -52,4 +52,15 @@ class MembershipTest {
         customer.useMembership(true);
         assertThat(customer.payment()).isEqualTo((int)(1000 * 0.7));
     }
+
+    @Test
+    void 멤버십_할인의_최대_한도는_8000원이다() {
+        Stock notPromotionStock = new Stock("콜라", 1000, 100, null);
+        Store store = new Store();
+        store.addStock(notPromotionStock);
+        Customer customer = new Customer();
+        store.buy(customer, "콜라", 100);
+        customer.useMembership(true);
+        assertThat(customer.payment()).isEqualTo((int)(1000 * 100 - 8000));
+    }
 }
