@@ -8,6 +8,10 @@ public class OutputView {
         setupBuffer();
     }
 
+    public void exception(Exception e) {
+        printWithFlush(e.getMessage());
+    }
+
     private void setupBuffer() {
         buffer = new StringBuilder();
     }

@@ -9,21 +9,21 @@ import store.domain.customer.OrderRequest;
 public class InputView {
 
     // [콜라-3],[에너지바-5]
-    public List<OrderRequest> orders() {
+    public static List<OrderRequest> orders() {
         return Arrays.stream(input().split(","))
             .map(OrderRequest::from)
             .toList();
     }
 
-    public boolean confirm() {
+    public static boolean confirm() {
         return Console.readLine() == "Y";
     }
 
-    private String input() {
+    private static String input() {
         return Console.readLine();
     }
 
-    public void close() {
+    public static void close() {
         Console.close();
     }
 }
