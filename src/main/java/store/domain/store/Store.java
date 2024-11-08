@@ -33,13 +33,22 @@ public class Store {
             Stock target = promotioning.get();
             // 프로모션중인 상품 재고보다 요구 수량이 많은 경우
             if (target.getQuantity() < quantity) {
-                if (notPromotionings.isEmpty() ||
-                    notPromotionings.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
-                    throw new IllegalArgumentException("[ERROR] 재고부족");
+                if (!notPromotionings.isEmpty()) {
+                    int dropQuantityToNormal = quantity / target.getPromotion().buyAndGet() * target.getPromotion()
+                        .buyAndGet();
+                    customer.notice(NoticeType.CANT_PROMOTION_SOME_STOCKS, target, dropQuantityToNormal);
+                    return;
+
+                    // TODO: 일반 재고 + 프로모션 재고 보다 요청 수량이 많으면 안됨
+                    // 프로모션중이지 않은 상품이 여럿이면 합해서 buy할 수 있어야 함. 요구사항도 다시 확인해볼것
+                    // notPromotionings.get(0).buy(quantity);
+                    // return;
                 }
-                // 프로모션중이지 않은 상품이 여럿이면 합해서 buy할 수 있어야 함. 요구사항도 다시 확인해볼것
-                notPromotionings.get(0).buy(quantity);
-                return;
+                throw new IllegalArgumentException("[ERROR] 재고부족");
+                // if (notPromotionings.isEmpty() ||
+                //     notPromotionings.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
+                //     throw new IllegalArgumentException("[ERROR] 재고부족");
+                // }
             }
             // 프로모션중인 상품 재고가 요구 수량보다 같거나 많은 경우
             if (quantity % target.getPromotion().buyAndGet() != 0) {

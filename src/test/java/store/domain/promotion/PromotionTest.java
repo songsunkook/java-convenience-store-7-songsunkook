@@ -74,4 +74,18 @@ class PromotionTest {
         // 구입확정 로직. 나중에 필요할 곳이 있을 것
         // customer.answer(new Notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, stock, 0));
     }
+
+    @Test
+    void 프로모션_재고가_부족하여_일부_수량을_혜택없이_결제해야_하는_경우_정가로_결제함을_안내한다() {
+        Promotion promotion = new Promotion("탄산2+1", 2, 1, LocalDate.of(2024, 01, 01), LocalDate.of(2024, 12, 31));
+        Stock stock = new Stock("콜라", 1000, 7, promotion);
+        Stock stock2 = new Stock("콜라", 1000, 10, null);
+        Store store = new Store();
+        store.addStock(stock);
+        store.addStock(stock2);
+        Customer customer = new Customer();
+        store.buy(customer, "콜라", 10);
+        assertThat(customer.getNotices().size()).isEqualTo(1);
+        assertThat(customer.getNotices().get(0).type()).isEqualTo(NoticeType.CANT_PROMOTION_SOME_STOCKS);
+    }
 }
