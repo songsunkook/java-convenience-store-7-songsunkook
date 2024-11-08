@@ -36,7 +36,7 @@ public class Store {
                 if (!notPromotionings.isEmpty()) {
                     int dropQuantityToNormal = quantity / target.getPromotion().buyAndGet() * target.getPromotion()
                         .buyAndGet();
-                    customer.notice(NoticeType.CANT_PROMOTION_SOME_STOCKS, target, dropQuantityToNormal);
+                    customer.notice(NoticeType.CANT_PROMOTION_SOME_STOCKS, target, quantity, dropQuantityToNormal);
                     return;
 
                     // TODO: 일반 재고 + 프로모션 재고 보다 요청 수량이 많으면 안됨
@@ -45,21 +45,30 @@ public class Store {
                     // return;
                 }
                 throw new IllegalArgumentException("[ERROR] 재고부족");
-                // if (notPromotionings.isEmpty() ||
-                //     notPromotionings.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
-                //     throw new IllegalArgumentException("[ERROR] 재고부족");
-                // }
             }
-            // 프로모션중인 상품 재고가 요구 수량보다 같거나 많은 경우
-            if (quantity % target.getPromotion().buyAndGet() != 0) {
-                int needQuantityForBonus = target.canBonusIfMoreQuantity(quantity);
-                customer.notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, target, needQuantityForBonus);
+            // 프로모션 대상인데 증정품을 안가져온 경우
+            int notPromotionCount = quantity % target.getPromotion().buyAndGet();
+            if (notPromotionCount == target.getPromotion().getBuy()) {
+                customer.notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, target, quantity, notPromotionCount);
                 return;
             }
 
-            promotioning.get().buy(quantity);
-            buyStock(customer, promotioning.get(), quantity, true);
-            return;
+            int buyCount =
+                quantity / promotioning.get().getPromotion().buyAndGet() * promotioning.get()
+                    .getPromotion()
+                    .buyAndGet();
+            quantity -= buyCount;
+            promotioning.get().buy(buyCount);
+            buyStock(customer, promotioning.get(), buyCount, true);
+            if (quantity == 0) {
+                return;
+            }
+        }
+
+        // 프로모션 상품을 구매하고 남는건 일반 상품으로 구매
+        if (notPromotionings.isEmpty() ||
+            notPromotionings.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
+            throw new IllegalArgumentException("[ERROR] 재고부족");
         }
         notPromotionings.get(0).buy(quantity);
         buyStock(customer, notPromotionings.get(0), quantity, false);

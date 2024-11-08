@@ -39,10 +39,17 @@ class MembershipTest {
         assertThat(customer.payment()).isEqualTo((int)(1000 * 3 * 0.7));
     }
 
-/*
     @Test
     void 프로모션_적용_후_남은_금액에_대해_할인한다() {
-
+        Promotion promotion = new Promotion("탄산2+1", 2, 1, LocalDate.of(2024, 01, 01), LocalDate.of(2024, 12, 31));
+        Stock promotionStock = new Stock("콜라", 1000, 10, promotion);
+        Stock notPromotionStock = new Stock("콜라", 1000, 10, null);
+        Store store = new Store();
+        store.addStock(promotionStock);
+        store.addStock(notPromotionStock);
+        Customer customer = new Customer();
+        store.buy(customer, "콜라", 4);
+        customer.useMembership(true);
+        assertThat(customer.payment()).isEqualTo((int)(1000 * 0.7));
     }
-*/
 }

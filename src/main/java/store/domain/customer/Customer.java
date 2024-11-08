@@ -15,12 +15,22 @@ public class Customer {
         return new ArrayList<>(notices);
     }
 
-    public void notice(NoticeType noticeType, Stock target, int needQuantityForBonus) {
-        notices.add(new Notice(noticeType, target, needQuantityForBonus));
+    public void notice(NoticeType noticeType, Stock target, int quantity, int needQuantityForBonus) {
+        notices.add(new Notice(noticeType, target, quantity, needQuantityForBonus));
     }
 
     public void order(Stock stock, int quantity, boolean isPromotioning) {
         boughtStocks.add(new Order(stock, quantity, isPromotioning));
+    }
+
+    public void noticeAnswer(Notice notice, boolean answer) {
+        if (notice.type() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
+            if (answer) {
+                boughtStocks.add(new Order(notice.getStock(), notice.getMoreQuantity(), false));
+                return;
+            }
+            boughtStocks.add(new Order(notice.getStock(), notice.getQuantity() + notice.getMoreQuantity(), false));
+        }
     }
 
     public void useMembership(boolean membership) {

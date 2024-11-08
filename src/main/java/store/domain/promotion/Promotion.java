@@ -35,4 +35,8 @@ public class Promotion {
     public int getBuy() {
         return buy;
     }
+
+    public int getGet() {
+        return get;
+    }
 }
