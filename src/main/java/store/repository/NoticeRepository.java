@@ -3,7 +3,7 @@ package store.repository;
 import java.util.HashMap;
 import java.util.Map;
 
-import store.domain.customer.Notice;
+import store.domain.notice.Notice;
 
 public class NoticeRepository {
 

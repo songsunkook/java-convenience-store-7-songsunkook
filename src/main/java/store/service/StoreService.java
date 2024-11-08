@@ -3,7 +3,7 @@ package store.service;
 import java.util.List;
 
 import store.domain.customer.Customer;
-import store.domain.customer.Notice;
+import store.domain.notice.Notice;
 import store.domain.store.Promotion;
 import store.domain.store.Store;
 import store.dto.NoticeResponse;
@@ -41,12 +41,7 @@ public class StoreService {
 
     public NoticeResponse nextNotice() {
         Notice nextNotice = customer.popNotice();
-        return new NoticeResponse(
-            nextNotice.getId(),
-            nextNotice.type(),
-            nextNotice.getStock().getName(),
-            nextNotice.getQuantity()
-        );
+        return NoticeResponse.from(nextNotice);
     }
 
     public void noticeAnswer(int noticeId, boolean confirm) {

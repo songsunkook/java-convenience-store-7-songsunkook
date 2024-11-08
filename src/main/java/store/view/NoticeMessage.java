@@ -1,11 +1,11 @@
 package store.view;
 
-import static store.domain.customer.NoticeType.CANT_PROMOTION_SOME_STOCKS;
-import static store.domain.customer.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
+import static store.domain.notice.NoticeType.CANT_PROMOTION_SOME_STOCKS;
+import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
 
 import java.util.Arrays;
 
-import store.domain.customer.NoticeType;
+import store.domain.notice.NoticeType;
 
 public enum NoticeMessage {
     FREE_BONUS("%n현재 %s은(는) %s개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)%n", CAN_PROMOTION_WITH_MORE_QUANTITY),

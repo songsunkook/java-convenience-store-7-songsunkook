@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import store.domain.customer.Customer;
-import store.domain.customer.NoticeType;
+import store.domain.notice.NoticeType;
 import store.domain.store.Promotion;
 import store.domain.store.Stock;
 import store.domain.store.Store;
@@ -70,7 +70,7 @@ class PromotionTest {
         Customer customer = new Customer();
         store.buy(customer, "콜라", 2);
         assertThat(customer.getNotices().size()).isEqualTo(1);
-        assertThat(customer.getNotices().get(0).type()).isEqualTo(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY);
+        assertThat(customer.getNotices().get(0).getType()).isEqualTo(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY);
 
         // TODO: 수정. 증정의 경우에만 안내한다. 2+1 상품을 1개 가져오면 안내하면안됨. 2개 가져와야 1개 증정 여부 물음
 
@@ -89,6 +89,6 @@ class PromotionTest {
         Customer customer = new Customer();
         store.buy(customer, "콜라", 10);
         assertThat(customer.getNotices().size()).isEqualTo(1);
-        assertThat(customer.getNotices().get(0).type()).isEqualTo(NoticeType.CANT_PROMOTION_SOME_STOCKS);
+        assertThat(customer.getNotices().get(0).getType()).isEqualTo(NoticeType.CANT_PROMOTION_SOME_STOCKS);
     }
 }

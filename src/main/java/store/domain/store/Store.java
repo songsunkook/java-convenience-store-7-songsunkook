@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import store.domain.customer.Customer;
-import store.domain.customer.NoticeType;
+import store.domain.notice.NoticeType;
 
 public class Store {
 
@@ -35,6 +35,7 @@ public class Store {
                 if (!notPromotionings.isEmpty()) {
                     int dropQuantityToNormal = quantity / target.getPromotion().buyAndGet() * target.getPromotion()
                         .buyAndGet();
+                    buyStock(customer, promotioning.get(), target.getQuantity() - dropQuantityToNormal, false);
                     customer.notice(NoticeType.CANT_PROMOTION_SOME_STOCKS, target, quantity, dropQuantityToNormal);
                     return;
 
@@ -48,7 +49,8 @@ public class Store {
             // 프로모션 대상인데 증정품을 안가져온 경우
             int notPromotionCount = quantity % target.getPromotion().buyAndGet();
             if (notPromotionCount == target.getPromotion().getBuy()) {
-                customer.notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, target, quantity, notPromotionCount);
+                customer.notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, target, quantity,
+                    target.getPromotion().getGet());
                 return;
             }
 
@@ -57,7 +59,6 @@ public class Store {
                     .getPromotion()
                     .buyAndGet();
             quantity -= buyCount;
-            promotioning.get().buy(buyCount);
             buyStock(customer, promotioning.get(), buyCount, true);
             if (quantity == 0) {
                 return;
@@ -69,7 +70,6 @@ public class Store {
             notPromotionings.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
             throw new IllegalArgumentException("[ERROR] 재고부족");
         }
-        notPromotionings.get(0).buy(quantity);
         buyStock(customer, notPromotionings.get(0), quantity, false);
     }
 
