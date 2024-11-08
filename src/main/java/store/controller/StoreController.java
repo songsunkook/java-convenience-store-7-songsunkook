@@ -18,12 +18,17 @@ public class StoreController {
 
     public void run() {
         do {
+            process(this::preSetting);
             process(this::showStocks);
             process(this::inputOrders);
             process(this::notice);
             process(this::noticeMembership);
             process(this::receipt);
         } while (processAndGet(this::rerun));
+    }
+
+    private void preSetting() {
+        storeService.preSetting();
     }
 
     private void showStocks() {
