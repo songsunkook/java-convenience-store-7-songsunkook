@@ -2,6 +2,7 @@ package store.controller;
 
 import java.util.function.Supplier;
 
+import store.dto.NoticeResponse;
 import store.service.StoreService;
 import store.view.InputView;
 import store.view.OutputView;
@@ -17,14 +18,15 @@ public class StoreController {
     }
 
     public void run() {
+        process(this::preSetting);
         do {
-            process(this::preSetting);
             process(this::showStocks);
-            process(this::inputOrders);
+            process(this::order);
             process(this::notice);
             process(this::noticeMembership);
             process(this::receipt);
         } while (processAndGet(this::rerun));
+        InputView.close();
     }
 
     private void preSetting() {
@@ -36,15 +38,16 @@ public class StoreController {
         outputView.showStocks(storeService.stocks());
     }
 
-    private void inputOrders() {
+    private void order() {
         outputView.inputOrders();
         storeService.order(InputView.orders());
     }
 
     private void notice() {
         while (storeService.hasNotice()) {
-            outputView.notice(storeService.nextNotice());
-            storeService.noticeAnswer(InputView.confirm());
+            NoticeResponse response = storeService.nextNotice();
+            outputView.notice(response);
+            storeService.noticeAnswer(response.id(), InputView.confirm());
         }
     }
 

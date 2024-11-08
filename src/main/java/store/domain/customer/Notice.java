@@ -3,6 +3,8 @@ package store.domain.customer;
 import store.domain.store.Stock;
 
 public class Notice {
+
+    private Integer id;
     private final NoticeType noticeType;
     private final Stock target;
     private final int quantity;
@@ -13,6 +15,14 @@ public class Notice {
         this.target = target;
         this.quantity = quantity;
         this.needQuantityForBonus = needQuantityForBonus;
+    }
+
+    public void save(int id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public NoticeType type() {

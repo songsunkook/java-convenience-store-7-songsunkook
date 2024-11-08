@@ -19,23 +19,47 @@ public class OutputView {
     }
 
     public void showStocks(StocksResponse response) {
-
+        response.stocks().stream()
+            .map(stock -> STOCK.getMessage(
+                stock.getName(),
+                stock.getPrice(),
+                stock.getQuantity(),
+                stock.getPromotion() == null ? "" : stock.getPromotion().getName()
+            ))
+            .forEach(this::print);
+        flush();
     }
 
     public void inputOrders() {
-        print(INPUT_ORDERS.getMessage());
+        printWithFlush(INPUT_ORDERS.getMessage());
     }
 
     public void notice(NoticeResponse response) {
-
+        printWithFlush(
+            NoticeMessage.from(response.noticeType()).getMessage(response.stockName(), response.stockQuantity()));
     }
 
     public void noticeMembership() {
-        printWithFlush(NOTICE_MEMBERSHIP.getMessage());
+        printWithFlush(MEMBERSHIP_CONDITION.getMessage());
     }
 
     public void receipt(ReceiptResponse response) {
-
+        print(RECEIPT.getMessage());
+        response.orders()
+            .forEach(order -> print(RECEIPT_STOCK.getMessage(order.name(), order.quantity(), order.price())));
+        print(RECEIPT_BONUS.getMessage());
+        response.bonusOrders().forEach(order -> print(RECEIPT_BONUS_STOCK.getMessage(order.name(), order.quantity())));
+        print(RECEIPT_LINE.getMessage());
+        // 금액통계
+        print(RECEIPT_MONEY_WITH_COUNT.getMessage("총구매액",
+            response.orders().size(),
+            response.orders().stream().mapToInt(ReceiptResponse.InnerOrder::price).sum() +
+                response.bonusOrders().stream().mapToInt(ReceiptResponse.InnerOrder::price).sum()
+        ));
+        print(RECEIPT_MONEY.getMessage("행사할인", response.promotionDiscount()));
+        print(RECEIPT_MONEY.getMessage("멤버십할인", response.membershipDiscount()));
+        print(RECEIPT_MONEY.getMessage("내실돈", response.totalPrice()));
+        flush();
     }
 
     public void inputRerun() {

@@ -20,4 +20,12 @@ public class Order {
     public boolean isPromotioning() {
         return isPromotioning;
     }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

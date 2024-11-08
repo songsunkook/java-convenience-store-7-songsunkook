@@ -2,6 +2,7 @@ package store.view;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import camp.nextstep.edu.missionutils.Console;
 import store.dto.OrderRequest;
@@ -16,7 +17,7 @@ public class InputView {
     }
 
     public static boolean confirm() {
-        return Console.readLine() == "Y";
+        return Objects.equals(Console.readLine(), "Y");
     }
 
     private static String input() {

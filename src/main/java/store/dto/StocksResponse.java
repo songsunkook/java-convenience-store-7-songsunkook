@@ -1,4 +1,10 @@
 package store.dto;
 
-public record StocksResponse() {
+import java.util.List;
+
+import store.domain.store.Stock;
+
+public record StocksResponse(
+    List<Stock> stocks
+) {
 }

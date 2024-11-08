@@ -76,4 +76,8 @@ public class Store {
     private void buyStock(Customer customer, Stock stock, int quantity, boolean isPromotioning) {
         customer.order(stock, quantity, isPromotioning);
     }
+
+    public List<Stock> getStocks() {
+        return stocks;
+    }
 }
