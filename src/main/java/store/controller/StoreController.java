@@ -49,7 +49,7 @@ public class StoreController {
     }
 
     private void receipt() {
-        outputView.receipt(storeService.recepit());
+        outputView.receipt(storeService.receipt());
     }
 
     private boolean rerun() {

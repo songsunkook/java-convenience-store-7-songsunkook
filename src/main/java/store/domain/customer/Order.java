@@ -1,6 +1,6 @@
 package store.domain.customer;
 
-import store.domain.stock.Stock;
+import store.domain.store.Stock;
 
 public class Order {
     private final Stock stock;

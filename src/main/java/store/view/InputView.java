@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import camp.nextstep.edu.missionutils.Console;
-import store.domain.customer.OrderRequest;
+import store.dto.OrderRequest;
 
 public class InputView {
 

@@ -1,4 +1,4 @@
-package store.domain.membership;
+package store.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import store.domain.customer.Customer;
-import store.domain.promotion.Promotion;
-import store.domain.stock.Stock;
+import store.domain.store.Promotion;
+import store.domain.store.Stock;
 import store.domain.store.Store;
 
 class MembershipTest {

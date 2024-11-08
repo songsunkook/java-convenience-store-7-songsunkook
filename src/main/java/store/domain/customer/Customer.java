@@ -3,7 +3,7 @@ package store.domain.customer;
 import java.util.ArrayList;
 import java.util.List;
 
-import store.domain.stock.Stock;
+import store.domain.store.Stock;
 
 public class Customer {
 

@@ -1,4 +1,4 @@
-package store.domain.customer;
+package store.dto;
 
 public record OrderRequest(String name, int quantity) {
 

@@ -1,9 +1,8 @@
-package store.domain.stock;
+package store.domain.store;
 
 import java.util.Objects;
 
 import camp.nextstep.edu.missionutils.DateTimes;
-import store.domain.promotion.Promotion;
 
 public class Stock {
 

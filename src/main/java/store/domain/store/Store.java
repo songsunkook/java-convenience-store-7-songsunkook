@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import store.domain.customer.Customer;
 import store.domain.customer.NoticeType;
-import store.domain.stock.Stock;
 
 public class Store {
 
