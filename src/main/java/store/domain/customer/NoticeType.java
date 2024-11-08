@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.customer;
 
 public enum NoticeType {
     CAN_PROMOTION_WITH_MORE_QUANTITY,

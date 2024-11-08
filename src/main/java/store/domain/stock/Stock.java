@@ -52,6 +52,10 @@ public class Stock {
         return promotion;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
     public int canBonusIfMoreQuantity(int buyQuantity) {
         // 제공 가능하다면
         if (quantity >= promotion.buyAndGet()) {

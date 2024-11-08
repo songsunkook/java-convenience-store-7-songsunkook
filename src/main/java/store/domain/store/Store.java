@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import store.domain.Customer;
-import store.domain.NoticeType;
+import store.domain.customer.Customer;
+import store.domain.customer.NoticeType;
 import store.domain.stock.Stock;
 
 public class Store {
@@ -29,7 +29,7 @@ public class Store {
             .filter(stock -> !stock.isPromotioning())
             .toList();
 
-        if (promotioning.isPresent()) {
+        if (promotioning.isPresent() && promotioning.get().getQuantity() > 0) {
             Stock target = promotioning.get();
             // 프로모션중인 상품 재고보다 요구 수량이 많은 경우
             if (target.getQuantity() < quantity) {
@@ -58,8 +58,14 @@ public class Store {
             }
 
             promotioning.get().buy(quantity);
+            buyStock(customer, promotioning.get(), quantity, true);
             return;
         }
-        targets.get(0).buy(quantity);
+        notPromotionings.get(0).buy(quantity);
+        buyStock(customer, notPromotionings.get(0), quantity, false);
+    }
+
+    private void buyStock(Customer customer, Stock stock, int quantity, boolean isPromotioning) {
+        customer.order(stock, quantity, isPromotioning);
     }
 }

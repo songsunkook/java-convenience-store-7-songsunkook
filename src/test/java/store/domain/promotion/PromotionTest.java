@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import camp.nextstep.edu.missionutils.DateTimes;
-import store.domain.Customer;
-import store.domain.NoticeType;
+import store.domain.customer.Customer;
+import store.domain.customer.NoticeType;
 import store.domain.stock.Stock;
 import store.domain.store.Store;
 

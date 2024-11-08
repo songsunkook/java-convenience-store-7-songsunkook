@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.customer;
 
 import store.domain.stock.Stock;
 
