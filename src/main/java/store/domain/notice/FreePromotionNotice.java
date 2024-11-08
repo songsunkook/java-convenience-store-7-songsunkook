@@ -2,7 +2,7 @@ package store.domain.notice;
 
 import store.domain.store.Stock;
 
-public class FreeBonusNotice implements Notice {
+public class FreePromotionNotice implements Notice {
 
     private final Stock target;
     private final NoticeType noticeType;
@@ -11,7 +11,7 @@ public class FreeBonusNotice implements Notice {
 
     private Integer id;
 
-    public FreeBonusNotice(NoticeType noticeType, Stock target, int buyQuantity, int freeBonusQuantity) {
+    public FreePromotionNotice(NoticeType noticeType, Stock target, int buyQuantity, int freeBonusQuantity) {
         this.noticeType = noticeType;
         this.target = target;
         this.buyQuantity = buyQuantity;

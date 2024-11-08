@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import store.domain.notice.CantPromotionNotice;
-import store.domain.notice.FreeBonusNotice;
+import store.domain.notice.FreePromotionNotice;
 import store.domain.notice.Notice;
 import store.domain.notice.NoticeType;
 import store.domain.store.Stock;
@@ -13,42 +13,34 @@ import store.repository.NoticeRepository;
 public class Customer {
 
     private final List<Order> orders = new ArrayList<>();
-    private final List<FreeBonusNotice> notices = new ArrayList<>();
+    private final List<FreePromotionNotice> notices = new ArrayList<>();
     private boolean membership = false;
 
     public void notice(NoticeType noticeType, Stock target, int quantity, int needQuantityForBonus) {
-        notices.add(new FreeBonusNotice(noticeType, target, quantity, needQuantityForBonus));
+        notices.add(new FreePromotionNotice(noticeType, target, quantity, needQuantityForBonus));
     }
 
-    public void order(Stock stock, int quantity, boolean isPromotioning) {
-        orders.add(new Order(stock, quantity, isPromotioning));
+    public void order(Stock stock, int quantity, int bonusQuantity, boolean isPromotioning) {
+        orders.add(new Order(stock, quantity, bonusQuantity, isPromotioning));
         stock.buy(quantity);
     }
 
     public void noticeAnswer(Notice notice, boolean answer) {
         if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
-            FreeBonusNotice formattedNotice = (FreeBonusNotice)notice;
+            FreePromotionNotice formattedNotice = (FreePromotionNotice)notice;
             if (answer) {
-                buy(formattedNotice.getStock(), formattedNotice.getQuantity() + formattedNotice.getMoreQuantity(),
-                    true);
+                order(formattedNotice.getStock(), formattedNotice.getQuantity() + formattedNotice.getMoreQuantity(),
+                    formattedNotice.getMoreQuantity(), true);
                 return;
             }
-            buy(formattedNotice.getStock(), formattedNotice.getMoreQuantity(), false);
+            order(formattedNotice.getStock(), formattedNotice.getMoreQuantity(), 0, false);
         }
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
             CantPromotionNotice formattedNotice = (CantPromotionNotice)notice;
             if (answer) {
-                buy(formattedNotice.getNormalStock(), formattedNotice.getQuantity(), false);
+                order(formattedNotice.getNormalStock(), formattedNotice.getQuantity(), 0, false);
             }
         }
-    }
-
-    private void buy(Stock formattedNotice, int formattedNotice1, boolean isPromotioning) {
-        orders.add(new Order(
-            formattedNotice,
-            formattedNotice1,
-            isPromotioning));
-        formattedNotice.buy(formattedNotice1);
     }
 
     public void useMembership(boolean membership) {
@@ -67,11 +59,11 @@ public class Customer {
         return !notices.isEmpty();
     }
 
-    public FreeBonusNotice popNotice() {
+    public FreePromotionNotice popNotice() {
         return notices.removeFirst();
     }
 
-    public List<FreeBonusNotice> getNotices() {
+    public List<FreePromotionNotice> getNotices() {
         return new ArrayList<>(notices);
     }
 
@@ -101,7 +93,7 @@ public class Customer {
     }
 
     public void flushNotices(NoticeRepository noticeRepository) {
-        for (FreeBonusNotice notice : notices) {
+        for (FreePromotionNotice notice : notices) {
             noticeRepository.save(notice);
         }
     }

@@ -1,7 +1,7 @@
 package store.dto;
 
 import store.domain.notice.CantPromotionNotice;
-import store.domain.notice.FreeBonusNotice;
+import store.domain.notice.FreePromotionNotice;
 import store.domain.notice.Notice;
 import store.domain.notice.NoticeType;
 
@@ -14,12 +14,12 @@ public record NoticeResponse(
 
     public static NoticeResponse from(Notice notice) {
         if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
-            FreeBonusNotice freeBonusNotice = (FreeBonusNotice)notice;
+            FreePromotionNotice freePromotionNotice = (FreePromotionNotice)notice;
             return new NoticeResponse(
-                freeBonusNotice.getId(),
-                freeBonusNotice.getType(),
-                freeBonusNotice.getStock().getName(),
-                freeBonusNotice.getMoreQuantity()
+                freePromotionNotice.getId(),
+                freePromotionNotice.getType(),
+                freePromotionNotice.getStock().getName(),
+                freePromotionNotice.getMoreQuantity()
             );
         }
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {

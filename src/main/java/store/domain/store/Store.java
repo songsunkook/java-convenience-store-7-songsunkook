@@ -20,22 +20,23 @@ public class Store {
             .filter(stock -> stock.equalsName(name))
             .toList();
 
-        Optional<Stock> promotioning = targets.stream()
+        Optional<Stock> promotioningStocks = targets.stream()
             .filter(Stock::isPromotioning)
             .findAny();
 
-        List<Stock> notPromotionings = targets.stream()
+        List<Stock> notPromotioningStocks = targets.stream()
             .filter(stock -> !stock.isPromotioning())
             .toList();
 
-        if (promotioning.isPresent() && promotioning.get().getQuantity() > 0) {
-            Stock target = promotioning.get();
+        if (promotioningStocks.isPresent() && promotioningStocks.get().getQuantity() > 0) {
+            Stock target = promotioningStocks.get();
             // 프로모션중인 상품 재고보다 요구 수량이 많은 경우
             if (target.getQuantity() < quantity) {
-                if (!notPromotionings.isEmpty()) {
+                if (!notPromotioningStocks.isEmpty()) {
                     int dropQuantityToNormal = quantity / target.getPromotion().buyAndGet() * target.getPromotion()
                         .buyAndGet();
-                    buyStock(customer, promotioning.get(), target.getQuantity() - dropQuantityToNormal, false);
+                    buyStock(customer, promotioningStocks.get(), target.getQuantity() - dropQuantityToNormal,
+                        0, false);
                     customer.notice(NoticeType.CANT_PROMOTION_SOME_STOCKS, target, quantity, dropQuantityToNormal);
                     return;
 
@@ -54,27 +55,29 @@ public class Store {
                 return;
             }
 
+            Promotion promotion = promotioningStocks.get().getPromotion();
             int buyCount =
-                quantity / promotioning.get().getPromotion().buyAndGet() * promotioning.get()
-                    .getPromotion()
+                quantity / promotion.buyAndGet() * promotion
                     .buyAndGet();
             quantity -= buyCount;
-            buyStock(customer, promotioning.get(), buyCount, true);
+            buyStock(customer, promotioningStocks.get(), buyCount,
+                buyCount / promotion.buyAndGet() * promotion.getGet()
+                , true);
             if (quantity == 0) {
                 return;
             }
         }
 
         // 프로모션 상품을 구매하고 남는건 일반 상품으로 구매
-        if (notPromotionings.isEmpty() ||
-            notPromotionings.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
+        if (notPromotioningStocks.isEmpty() ||
+            notPromotioningStocks.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
             throw new IllegalArgumentException("[ERROR] 재고부족");
         }
-        buyStock(customer, notPromotionings.get(0), quantity, false);
+        buyStock(customer, notPromotioningStocks.get(0), quantity, 0, false);
     }
 
-    private void buyStock(Customer customer, Stock stock, int quantity, boolean isPromotioning) {
-        customer.order(stock, quantity, isPromotioning);
+    private void buyStock(Customer customer, Stock stock, int quantity, int bonusQuantity, boolean isPromotioning) {
+        customer.order(stock, quantity, bonusQuantity, isPromotioning);
     }
 
     public List<Stock> getStocks() {

@@ -55,25 +55,6 @@ public class StoreService {
     }
 
     public ReceiptResponse receipt() {
-        return new ReceiptResponse(
-            customer.getOrders().stream()
-                .filter(order -> !order.isPromotioning())
-                .map(order -> new ReceiptResponse.InnerOrder(
-                    order.getStock().getName(),
-                    order.getQuantity(),
-                    order.price()
-                )).toList(),
-            customer.getOrders().stream()
-                .filter(order -> order.isPromotioning())
-                .map(order -> new ReceiptResponse.InnerOrder(
-                    order.getStock().getName(),
-                    order.getQuantity(),
-                    order.price()
-                )).toList(),
-            customer.getTotalPrice(),
-            customer.getPromotionDiscount(),
-            customer.getMembershipDiscount(customer.getTotalPrice()),
-            customer.payment()
-        );
+        return ReceiptResponse.from(customer);
     }
 }
