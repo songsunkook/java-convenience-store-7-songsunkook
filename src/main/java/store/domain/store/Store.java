@@ -34,6 +34,12 @@ public class Store {
             // 프로모션중인 상품 재고보다 요구 수량이 많은 경우
             if (target.getQuantity() < quantity) {
                 if (!notPromotioningStocks.isEmpty()) {
+                    // 일반 재고 + 프로모션 재고 보다 요청 수량이 많은 경우
+                    if (promotioningStocks.stream().mapToInt(Stock::getQuantity).sum() +
+                        notPromotioningStocks.stream().mapToInt(Stock::getQuantity).sum() < quantity) {
+                        throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+                    }
+
                     int dropQuantityToNormal = quantity / target.getPromotion().buyAndGet() * target.getPromotion()
                         .buyAndGet();
                     buyStock(customer, promotioningStocks.get(), target.getQuantity() - dropQuantityToNormal,
