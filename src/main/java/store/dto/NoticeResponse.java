@@ -19,7 +19,7 @@ public record NoticeResponse(
                 freePromotionNotice.getId(),
                 freePromotionNotice.getType(),
                 freePromotionNotice.getStock().getName(),
-                freePromotionNotice.getMoreQuantity()
+                freePromotionNotice.getFreeBonusQuantity()
             );
         }
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {

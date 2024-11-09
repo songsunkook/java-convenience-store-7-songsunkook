@@ -5,15 +5,13 @@ import store.domain.store.Stock;
 public class CantPromotionNotice implements Notice {
 
     private final NoticeType noticeType;
-    private final Stock promotionStock;
     private final Stock normalStock;
     private final int quantity;
 
     private Integer id;
 
-    public CantPromotionNotice(NoticeType noticeType, Stock promotionStock, Stock normalStock, int quantity) {
+    public CantPromotionNotice(NoticeType noticeType, Stock normalStock, int quantity) {
         this.noticeType = noticeType;
-        this.promotionStock = promotionStock;
         this.normalStock = normalStock;
         this.quantity = quantity;
     }
@@ -34,11 +32,7 @@ public class CantPromotionNotice implements Notice {
     }
 
     public String getStockName() {
-        return promotionStock.getName();
-    }
-
-    public Stock getPromotionStock() {
-        return promotionStock;
+        return normalStock.getName();
     }
 
     public Stock getNormalStock() {

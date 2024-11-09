@@ -1,12 +1,14 @@
 package store.domain.store;
 
+import static store.domain.notice.NoticeType.CANT_PROMOTION_SOME_STOCKS;
+import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import store.domain.customer.Customer;
-import store.domain.notice.NoticeType;
 
 public class Store {
 
@@ -44,7 +46,7 @@ public class Store {
                         .buyAndGet();
                     buyStock(customer, promotioningStocks.get(), target.getQuantity() - dropQuantityToNormal,
                         0, false);
-                    customer.notice(NoticeType.CANT_PROMOTION_SOME_STOCKS, target, quantity, dropQuantityToNormal);
+                    customer.notice(CANT_PROMOTION_SOME_STOCKS, target, dropQuantityToNormal);
                     return;
 
                     // TODO: 일반 재고 + 프로모션 재고 보다 요청 수량이 많으면 안됨
@@ -57,8 +59,7 @@ public class Store {
             // 프로모션 대상인데 증정품을 안가져온 경우
             int notPromotionCount = quantity % target.getPromotion().buyAndGet();
             if (notPromotionCount == target.getPromotion().getBuy()) {
-                customer.notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, target, quantity,
-                    target.getPromotion().getGet());
+                customer.notice(CAN_PROMOTION_WITH_MORE_QUANTITY, target, quantity);
                 return;
             }
 

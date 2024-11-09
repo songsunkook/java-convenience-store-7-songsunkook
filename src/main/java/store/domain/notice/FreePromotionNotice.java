@@ -41,7 +41,7 @@ public class FreePromotionNotice implements Notice {
         return buyQuantity;
     }
 
-    public int getMoreQuantity() {
+    public int getFreeBonusQuantity() {
         return freeBonusQuantity;
     }
 }

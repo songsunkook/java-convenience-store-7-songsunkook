@@ -38,7 +38,7 @@ public class StoreService {
 
     public void order(List<OrderRequest> orders) {
         orders.forEach(request -> store.buy(customer, request.name(), request.quantity()));
-        customer.flushNotices(noticeRepository);
+        noticeRepository.saveAllByCustomer(customer);
     }
 
     public boolean hasNotice() {

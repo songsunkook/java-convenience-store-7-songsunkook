@@ -3,6 +3,7 @@ package store.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+import store.domain.customer.Customer;
 import store.domain.notice.Notice;
 
 public class NoticeRepository {
@@ -27,5 +28,9 @@ public class NoticeRepository {
 
     public void remove(Notice notice) {
         db.remove(notice.getId());
+    }
+
+    public void saveAllByCustomer(Customer customer) {
+        customer.getNotices().forEach(this::save);
     }
 }
