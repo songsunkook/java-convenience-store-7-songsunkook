@@ -13,10 +13,11 @@ import store.repository.NoticeRepository;
 public class Customer {
 
     private final Orders orders = new Orders();
-    private final List<FreePromotionNotice> notices = new ArrayList<>();
-    private boolean membership = false;
+    private final List<Notice> notices = new ArrayList<>();
+    private Membership membership = new Membership(false);
 
     public void notice(NoticeType noticeType, Stock target, int quantity, int needQuantityForBonus) {
+        // TODO:  다른클래스로 옮기기. 알림별로 매개변수가 다름
         notices.add(new FreePromotionNotice(noticeType, target, quantity, needQuantityForBonus));
     }
 
@@ -44,7 +45,7 @@ public class Customer {
     }
 
     public void useMembership(boolean membership) {
-        this.membership = membership;
+        this.membership = this.membership.use(membership);
     }
 
     public int payment() {
@@ -52,7 +53,7 @@ public class Customer {
         return totalPrice - getMembershipDiscount() - getPromotionDiscount();
     }
 
-    private int getPromotioningOrderTotalPrice() {
+    private int getPromotionTotalPrice() {
         return orders.promotionTotalPrice();
     }
 
@@ -60,11 +61,11 @@ public class Customer {
         return !notices.isEmpty();
     }
 
-    public FreePromotionNotice popNotice() {
+    public Notice popNotice() {
         return notices.removeFirst();
     }
 
-    public List<FreePromotionNotice> getNotices() {
+    public List<Notice> getNotices() {
         return new ArrayList<>(notices);
     }
 
@@ -81,18 +82,11 @@ public class Customer {
     }
 
     public int getMembershipDiscount() {
-        if (!membership) {
-            return 0;
-        }
-        int totalPrice = getTotalPrice() - getPromotioningOrderTotalPrice();
-        if (totalPrice * 0.3 >= 8000) {
-            return 8000;
-        }
-        return (int)(totalPrice * 0.3);
+        return membership.getDiscount(getTotalPrice() - getPromotionTotalPrice());
     }
 
     public void flushNotices(NoticeRepository noticeRepository) {
-        for (FreePromotionNotice notice : notices) {
+        for (Notice notice : notices) {
             noticeRepository.save(notice);
         }
     }
