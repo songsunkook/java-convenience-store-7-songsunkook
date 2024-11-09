@@ -12,7 +12,7 @@ import store.repository.NoticeRepository;
 
 public class Customer {
 
-    private final List<Order> orders = new ArrayList<>();
+    private final Orders orders = new Orders();
     private final List<FreePromotionNotice> notices = new ArrayList<>();
     private boolean membership = false;
 
@@ -49,20 +49,11 @@ public class Customer {
 
     public int payment() {
         int totalPrice = getTotalPrice();
-        return totalPrice - getMembershipDiscount() - totalPromotionDiscount();
-    }
-
-    public int totalPromotionDiscount() {
-        return orders.stream()
-            .mapToInt(order -> order.getBonusQuantity() * order.price())
-            .sum();
+        return totalPrice - getMembershipDiscount() - getPromotionDiscount();
     }
 
     private int getPromotioningOrderTotalPrice() {
-        return orders.stream()
-            .filter(Order::isPromotioning)
-            .mapToInt(order -> order.getQuantity() * order.price())
-            .sum();
+        return orders.promotionTotalPrice();
     }
 
     public boolean hasNotice() {
@@ -78,20 +69,15 @@ public class Customer {
     }
 
     public List<Order> getOrders() {
-        return orders;
+        return orders.getOrders();
     }
 
     public int getTotalPrice() {
-        return orders.stream()
-            .mapToInt(order -> order.price() * order.getQuantity())
-            .sum();
+        return orders.totalPrice();
     }
 
     public int getPromotionDiscount() {
-        return orders.stream()
-            .filter(Order::isPromotioning)
-            .mapToInt(Order::price)
-            .sum();
+        return orders.bonusDiscount();
     }
 
     public int getMembershipDiscount() {
