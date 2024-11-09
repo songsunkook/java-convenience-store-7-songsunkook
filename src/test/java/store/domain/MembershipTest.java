@@ -36,7 +36,7 @@ class MembershipTest {
         store.buy(customer, "콜라", 9);
         store.buy(customer, "아이스크림", 3);
         customer.useMembership(true);
-        assertThat(customer.payment()).isEqualTo((int)(1000 * 3 * 0.7));
+        assertThat(customer.payment()).isEqualTo((int)(1000 * 6 + 1000 * 3 * 0.7));
     }
 
     @Test
@@ -50,7 +50,7 @@ class MembershipTest {
         Customer customer = new Customer();
         store.buy(customer, "콜라", 4);
         customer.useMembership(true);
-        assertThat(customer.payment()).isEqualTo((int)(1000 * 0.7));
+        assertThat(customer.payment()).isEqualTo((int)(1000 * 2 + 1000 * 0.7));
     }
 
     @Test
