@@ -16,7 +16,7 @@ public class Order {
     }
 
     public int price() {
-        return stock.getPrice() * quantity;
+        return stock.getPrice();
     }
 
     public boolean isPromotioning() {
