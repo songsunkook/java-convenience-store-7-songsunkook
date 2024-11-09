@@ -37,7 +37,7 @@ public record ReceiptResponse(
                 .toList(),
             customer.getTotalPrice(),
             customer.getPromotionDiscount(),
-            customer.getMembershipDiscount(customer.getTotalPrice()),
+            customer.getMembershipDiscount(),
             customer.payment()
         );
     }

@@ -49,10 +49,20 @@ public class Customer {
 
     public int payment() {
         int totalPrice = getTotalPrice();
-        if (membership) {
-            return totalPrice - getMembershipDiscount(totalPrice);
-        }
-        return totalPrice;
+        return totalPrice - getMembershipDiscount() - totalPromotionDiscount();
+    }
+
+    public int totalPromotionDiscount() {
+        return orders.stream()
+            .mapToInt(order -> order.getBonusQuantity() * order.price())
+            .sum();
+    }
+
+    private int getPromotioningOrderTotalPrice() {
+        return orders.stream()
+            .filter(Order::isPromotioning)
+            .mapToInt(order -> order.getQuantity() * order.price())
+            .sum();
     }
 
     public boolean hasNotice() {
@@ -73,8 +83,7 @@ public class Customer {
 
     public int getTotalPrice() {
         return orders.stream()
-            .filter(order -> !order.isPromotioning())
-            .mapToInt(Order::price)
+            .mapToInt(order -> order.price() * order.getQuantity())
             .sum();
     }
 
@@ -85,7 +94,11 @@ public class Customer {
             .sum();
     }
 
-    public int getMembershipDiscount(int totalPrice) {
+    public int getMembershipDiscount() {
+        if (!membership) {
+            return 0;
+        }
+        int totalPrice = getTotalPrice() - getPromotioningOrderTotalPrice();
         if (totalPrice * 0.3 >= 8000) {
             return 8000;
         }

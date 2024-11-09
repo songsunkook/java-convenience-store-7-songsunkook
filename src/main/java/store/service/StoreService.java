@@ -26,7 +26,12 @@ public class StoreService {
         FileParser.readProducts(promotions).forEach(store::addStock);
     }
 
+    public void newCustomer() {
+        customer = new Customer();
+    }
+
     public StocksResponse stocks() {
+        customer = new Customer();
         return new StocksResponse(store.getStocks());
     }
 

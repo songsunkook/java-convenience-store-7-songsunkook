@@ -20,6 +20,7 @@ public class StoreController {
     public void run() {
         process(this::preSetting);
         do {
+            process(this::newCustomer);
             process(this::showStocks);
             process(this::order);
             process(this::notice);
@@ -31,6 +32,10 @@ public class StoreController {
 
     private void preSetting() {
         storeService.preSetting();
+    }
+
+    private void newCustomer() {
+        storeService.newCustomer();
     }
 
     private void showStocks() {

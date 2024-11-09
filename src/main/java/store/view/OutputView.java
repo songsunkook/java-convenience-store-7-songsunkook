@@ -56,9 +56,9 @@ public class OutputView {
             response.orders().stream().mapToInt(ReceiptResponse.InnerOrder::price).sum() +
                 response.bonusOrders().stream().mapToInt(ReceiptResponse.InnerOrder::price).sum()
         ));
-        print(RECEIPT_MONEY.getMessage("행사할인", response.promotionDiscount()));
-        print(RECEIPT_MONEY.getMessage("멤버십할인", response.membershipDiscount()));
-        print(RECEIPT_MONEY.getMessage("내실돈", response.totalPrice()));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage("행사할인", response.promotionDiscount()));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage("멤버십할인", response.membershipDiscount()));
+        print(RECEIPT_MONEY.getMessage("내실돈", response.payment()));
         flush();
     }
 

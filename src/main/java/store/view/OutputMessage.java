@@ -19,8 +19,9 @@ public enum OutputMessage {
     RECEIPT_BONUS_STOCK("%-10s\t%4d%n"),
     RECEIPT_LINE("====================================%n"),
     RECEIPT_MONEY_WITH_COUNT("%-6s\t\t%4s\t\t%7s%n"),
-    RECEIPT_MONEY("%-6s\t\t%7s%n"),
-    RERUN("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)%n"),
+    RECEIPT_MONEY("%-6s\t\t%d%n"),
+    RECEIPT_DISCOUNT_MONEY("%-6s\t\t-%d%n"),
+    RERUN("%n감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)%n"),
     ;
     /**
      * ==============W 편의점================
