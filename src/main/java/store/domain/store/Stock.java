@@ -20,6 +20,10 @@ public class Stock {
         buyQuantity = 0;
     }
 
+    public static Stock normalEmptyStockFrom(Stock promotioningStock) {
+        return new Stock(promotioningStock.name, promotioningStock.price, 0, null);
+    }
+
     public void buy(int quantity) {
         if (this.quantity < quantity) {
             throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");

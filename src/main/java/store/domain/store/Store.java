@@ -2,6 +2,7 @@ package store.domain.store;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import store.domain.customer.Customer;
@@ -82,5 +83,27 @@ public class Store {
 
     public List<Stock> getStocks() {
         return stocks;
+    }
+
+    public void readyStocks() {
+        List<Stock> promotioningStocks = stocks.stream()
+            .filter(Stock::isPromotioning)
+            .toList();
+        promotioningStocks.stream()
+            .filter(promotioningStock -> !containsNormalStock(promotioningStock))
+            .forEach(promotioningStock -> {
+                stocks.add(Stock.normalEmptyStockFrom(promotioningStock));
+            });
+    }
+
+    private boolean containsNormalStock(Stock promotioningStock) {
+        return findByName(promotioningStock.getName()).stream()
+            .anyMatch(stock -> !stock.isPromotioning());
+    }
+
+    private List<Stock> findByName(String stockName) {
+        return stocks.stream()
+            .filter(stock -> Objects.equals(stock.getName(), stockName))
+            .toList();
     }
 }

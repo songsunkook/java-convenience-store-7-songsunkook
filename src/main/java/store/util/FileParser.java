@@ -65,6 +65,7 @@ public class FileParser {
         } catch (IOException e) {
 
         }
+
         return stocks;
     }
 

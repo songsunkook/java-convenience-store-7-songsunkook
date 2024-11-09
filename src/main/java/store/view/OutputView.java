@@ -23,7 +23,7 @@ public class OutputView {
             .map(stock -> STOCK.getMessage(
                 stock.getName(),
                 stock.getPrice(),
-                stock.getQuantity(),
+                stock.getQuantity() == 0 ? "재고 없음" : stock.getQuantity(),
                 stock.getPromotion() == null ? "" : stock.getPromotion().getName()
             ))
             .forEach(this::print);
