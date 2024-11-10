@@ -1,5 +1,7 @@
 package store.dto;
 
+import store.exception.argument.InvalidInputFormatException;
+
 public record OrderRequest(String name, int quantity) {
 
     public static OrderRequest from(String input) {
@@ -10,7 +12,7 @@ public record OrderRequest(String name, int quantity) {
             int count = Integer.parseInt(split[1].substring(0, split[1].length() - 1));
             return new OrderRequest(name, count);
         } catch (Exception e) {
-            throw new IllegalArgumentException();
+            throw new InvalidInputFormatException();
         }
     }
 }

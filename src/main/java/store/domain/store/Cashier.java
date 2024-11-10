@@ -6,6 +6,7 @@ import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
 import store.domain.customer.Customer;
 import store.domain.notice.Notice;
 import store.domain.notice.NoticeType;
+import store.exception.argument.OverStockQuantityException;
 
 public class Cashier {
 
@@ -73,7 +74,7 @@ public class Cashier {
         if (notPromotionStock == null ||
             notPromotionStock.isEmpty() ||
             notPromotionStock.getQuantity() < leftRequestQuantity) {
-            throw new IllegalArgumentException("[ERROR] 재고부족");
+            throw new OverStockQuantityException();
         }
         buyStock(customer, notPromotionStock, leftRequestQuantity, 0, false);
         finishCalculate = true;
@@ -95,7 +96,7 @@ public class Cashier {
             totalQuantity += notPromotionStock.getQuantity();
         }
         if (totalQuantity < requestQuantity) {
-            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+            throw new OverStockQuantityException();
         }
     }
 

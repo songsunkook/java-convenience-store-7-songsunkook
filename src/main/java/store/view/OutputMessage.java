@@ -19,7 +19,7 @@ public enum OutputMessage {
         %-10s%20s%20s
         """, "상품명", "수량", "금액")),
     RECEIPT_STOCK("%-10s%20s%30s%n"),
-    RECEIPT_BONUS("=============증	정===============%n"),
+    RECEIPT_BONUS(String.format("=============증%10s정===============%n", "")),
     RECEIPT_BONUS_STOCK("%-10s%20s%n"),
     RECEIPT_LINE("====================================%n"),
     RECEIPT_MONEY_WITH_COUNT("%-10s%20s%20s%n"),

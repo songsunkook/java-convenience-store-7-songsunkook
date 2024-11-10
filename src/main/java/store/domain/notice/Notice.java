@@ -4,6 +4,7 @@ import static store.domain.notice.NoticeType.CANT_PROMOTION_SOME_STOCKS;
 import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
 
 import store.domain.store.Stock;
+import store.exception.state.InvalidNoticeTypeException;
 
 public interface Notice {
 
@@ -20,6 +21,6 @@ public interface Notice {
         if (noticeType == CANT_PROMOTION_SOME_STOCKS) {
             return new CantPromotionNotice(noticeType, stock, quantity);
         }
-        throw new IllegalStateException();
+        throw new InvalidNoticeTypeException();
     }
 }

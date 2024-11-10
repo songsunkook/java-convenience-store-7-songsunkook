@@ -1,6 +1,8 @@
 package store.domain.store;
 
 import camp.nextstep.edu.missionutils.DateTimes;
+import store.exception.argument.OverStockQuantityException;
+import store.exception.state.RequestBonusForNonPromotionalStock;
 
 public class Stock {
 
@@ -24,7 +26,7 @@ public class Stock {
 
     public void buy(int quantity) {
         if (this.quantity < quantity) {
-            throw new IllegalStateException("재고 부족한 상황에 초과된 요청");
+            throw new OverStockQuantityException();
         }
         this.quantity -= quantity;
         buyQuantity += quantity;
@@ -40,7 +42,7 @@ public class Stock {
 
     public int bonus() {
         if (promotion == null) {
-            throw new IllegalStateException("프로모션중이지 않은 재고에 대한 증정품 요청");
+            throw new RequestBonusForNonPromotionalStock();
         }
         return promotion.bonus(buyQuantity);
     }

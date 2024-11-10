@@ -4,6 +4,7 @@ import store.domain.notice.CantPromotionNotice;
 import store.domain.notice.FreePromotionNotice;
 import store.domain.notice.Notice;
 import store.domain.notice.NoticeType;
+import store.exception.state.InvalidNoticeTypeException;
 
 public record NoticeResponse(
     Integer id,
@@ -31,7 +32,6 @@ public record NoticeResponse(
                 cantPromotionNotice.getQuantity()
             );
         }
-        throw new IllegalStateException("");
-        // TODO: 예외수정
+        throw new InvalidNoticeTypeException();
     }
 }

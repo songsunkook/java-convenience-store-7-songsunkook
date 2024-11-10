@@ -6,6 +6,7 @@ import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
 import java.util.Arrays;
 
 import store.domain.notice.NoticeType;
+import store.exception.state.InvalidNoticeTypeException;
 
 public enum NoticeMessage {
     FREE_BONUS("%n현재 %s은(는) %s개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)%n", CAN_PROMOTION_WITH_MORE_QUANTITY),
@@ -28,7 +29,6 @@ public enum NoticeMessage {
         return Arrays.stream(values())
             .filter(noticeMessage -> noticeMessage.noticeType == noticeType)
             .findAny()
-            .orElseThrow();
-        // TODO: 구체적 예외처리
+            .orElseThrow(InvalidNoticeTypeException::new);
     }
 }

@@ -11,7 +11,6 @@ class StockTest {
 
     @Test
     void 재고가_충분하면_구매가_정상적으로_진행된다() {
-        // name,price,quantity,promotion
         Stock stock = new Stock("콜라", 1000, 10, null);
         stock.buy(5);
     }

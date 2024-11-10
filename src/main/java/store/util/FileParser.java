@@ -12,6 +12,8 @@ import java.util.Objects;
 
 import store.domain.store.Promotion;
 import store.domain.store.Stock;
+import store.exception.state.InvalidFileException;
+import store.exception.state.InvalidPromotionException;
 
 public class FileParser {
 
@@ -26,8 +28,7 @@ public class FileParser {
             File file = new File(path);
             return new FileReader(file);
         } catch (FileNotFoundException e) {
-            // TODO: 가공한 커스텀 예외로 바꾸기
-            throw new RuntimeException();
+            throw new InvalidFileException();
         }
     }
 
@@ -74,8 +75,7 @@ public class FileParser {
         Promotion found = promotions.stream()
             .filter(promotion -> Objects.equals(promotion.getName(), split[3]))
             .findAny()
-            .orElseThrow();
-        // TODO: 예외 정의
+            .orElseThrow(InvalidPromotionException::new);
         return new Stock(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]), found);
     }
 }
