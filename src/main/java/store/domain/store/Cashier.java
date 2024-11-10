@@ -54,6 +54,7 @@ public class Cashier {
         if (notPromotionCount == onPromotion.getPromotion().getBuy()) {
             sendNotice(CAN_PROMOTION_WITH_MORE_QUANTITY, onPromotion, leftRequestQuantity);
             finishCalculate = true;
+            return;
         }
 
         Promotion promotion = onPromotion.getPromotion();
