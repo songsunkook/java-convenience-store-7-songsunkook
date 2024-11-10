@@ -35,7 +35,7 @@ public record StocksResponse(
             if (quantity == 0) {
                 return "재고 없음";
             }
-            return String.valueOf(quantity);
+            return quantity + "개";
         }
     }
 }

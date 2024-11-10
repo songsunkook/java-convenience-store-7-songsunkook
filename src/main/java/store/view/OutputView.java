@@ -23,10 +23,9 @@ public class OutputView {
             .map(stock -> STOCK.getMessage(
                 stock.name(),
                 stock.price(),
-                stock.outputQuantity() + "개",
+                stock.outputQuantity(),
                 stock.promotion()
-            ))
-            .forEach(this::print);
+            )).forEach(this::print);
         flush();
     }
 
@@ -36,7 +35,11 @@ public class OutputView {
 
     public void notice(NoticeResponse response) {
         printWithFlush(
-            NoticeMessage.from(response.noticeType()).getMessage(response.stockName(), response.stockQuantity()));
+            NoticeMessage.from(response.noticeType())
+                .getMessage(
+                    response.stockName(),
+                    response.stockQuantity()
+                ));
     }
 
     public void noticeMembership() {
@@ -45,16 +48,40 @@ public class OutputView {
 
     public void receipt(ReceiptResponse response) {
         print(RECEIPT.getMessage());
-        response.orders()
-            .forEach(order -> print(RECEIPT_STOCK.getMessage(order.name(), order.quantity(), order.price())));
+        printReceiptOrders(response);
+        printReceiptBonus(response);
+        printReceiptTotalPrice(response);
+        flush();
+    }
+
+    private void printReceiptOrders(ReceiptResponse response) {
+        response.orders().forEach(order ->
+            print(RECEIPT_STOCK.getMessage(
+                order.name(),
+                order.quantity(),
+                order.price()
+            )));
+    }
+
+    private void printReceiptBonus(ReceiptResponse response) {
         print(RECEIPT_BONUS.getMessage());
-        response.bonusOrders().forEach(order -> print(RECEIPT_BONUS_STOCK.getMessage(order.name(), order.quantity())));
+        response.bonusOrders().forEach(order ->
+            print(RECEIPT_BONUS_STOCK.getMessage(
+                order.name(),
+                order.quantity()
+            )));
+    }
+
+    private void printReceiptTotalPrice(ReceiptResponse response) {
         print(RECEIPT_LINE.getMessage());
         print(RECEIPT_MONEY_WITH_COUNT.getMessage("총구매액", response.orders().size(), response.totalPrice()));
-        print(RECEIPT_DISCOUNT_MONEY.getMessage("행사할인", "-" + response.promotionDiscount()));
-        print(RECEIPT_DISCOUNT_MONEY.getMessage("멤버십할인", "-" + response.membershipDiscount()));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage("행사할인", discountMoneyMessage(response.promotionDiscount())));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage("멤버십할인", discountMoneyMessage(response.membershipDiscount())));
         print(RECEIPT_MONEY.getMessage("내실돈", response.payment()));
-        flush();
+    }
+
+    private String discountMoneyMessage(int discount) {
+        return "-" + discount;
     }
 
     public void inputRerun() {
