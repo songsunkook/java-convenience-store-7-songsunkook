@@ -15,13 +15,10 @@ import store.domain.store.Stock;
 
 public class FileParser {
 
-    // private static final String PROMOTION_FILE_PATH = "./../../resources/promotions.md";
     private static final String PROMOTION_FILE_PATH = "src/main/resources/promotions.md";
-    // private static final String PRODUCT_FILE_PATH = "./../../resources/products.md";
     private static final String PRODUCT_FILE_PATH = "src/main/resources/products.md";
-// TODO: service에 중단점걸어논거있으니까 파일 잘 읽히면 (꼉로수정해야함) 커밋하기.
-    private FileParser() {
 
+    private FileParser() {
     }
 
     private static FileReader openFile(String path) {
