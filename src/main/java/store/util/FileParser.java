@@ -20,6 +20,9 @@ public class FileParser {
     private static final String PROMOTION_FILE_PATH = "src/main/resources/promotions.md";
     private static final String PRODUCT_FILE_PATH = "src/main/resources/products.md";
 
+    private static final String DELIMITER = ",";
+    private static final String EMPTY_PROMOTION = "null";
+
     private FileParser() {
     }
 
@@ -47,9 +50,14 @@ public class FileParser {
     }
 
     private static Promotion readPromotion(String line) {
-        String[] split = line.split(",");
-        return new Promotion(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]),
-            LocalDate.parse(split[3]), LocalDate.parse(split[4]));
+        FilePromotion filePromotion = FilePromotion.of(line.split(DELIMITER));
+        return new Promotion(
+            filePromotion.name,
+            filePromotion.buy,
+            filePromotion.get,
+            filePromotion.startDate,
+            filePromotion.endDate
+        );
     }
 
     public static List<Stock> readProducts(List<Promotion> promotions) {
@@ -63,19 +71,69 @@ public class FileParser {
         } catch (IOException e) {
 
         }
-
         return stocks;
     }
 
     private static Stock readProduct(String line, List<Promotion> promotions) {
-        String[] split = line.split(",");
-        if (Objects.equals(split[3], "null")) {
-            return new Stock(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]), null);
+        String[] split = line.split(DELIMITER);
+        if (Objects.equals(split[3], EMPTY_PROMOTION)) {
+            FileStock fileStock = FileStock.of(split, null);
+            return convertToStock(fileStock);
         }
-        Promotion found = promotions.stream()
+        Promotion existPromotion = findExistPromotion(promotions, split);
+        FileStock fileStock = FileStock.of(split, existPromotion);
+        return convertToStock(fileStock);
+    }
+
+    private static Promotion findExistPromotion(List<Promotion> promotions, String[] split) {
+        return promotions.stream()
             .filter(promotion -> Objects.equals(promotion.getName(), split[3]))
             .findAny()
             .orElseThrow(InvalidPromotionException::new);
-        return new Stock(split[0], Integer.parseInt(split[1]), Integer.parseInt(split[2]), found);
+    }
+
+    private static Stock convertToStock(FileStock fileStock) {
+        return new Stock(
+            fileStock.name,
+            fileStock.price,
+            fileStock.quantity,
+            fileStock.promotion
+        );
+    }
+
+    private record FilePromotion(
+        String name,
+        int buy,
+        int get,
+        LocalDate startDate,
+        LocalDate endDate
+    ) {
+
+        private static FilePromotion of(String[] split) {
+            return new FilePromotion(
+                split[0],
+                Integer.parseInt(split[1]),
+                Integer.parseInt(split[2]),
+                LocalDate.parse(split[3]),
+                LocalDate.parse(split[4])
+            );
+        }
+    }
+
+    private record FileStock(
+        String name,
+        int price,
+        int quantity,
+        Promotion promotion
+    ) {
+
+        private static FileStock of(String[] split, Promotion promotion) {
+            return new FileStock(
+                split[0],
+                Integer.parseInt(split[1]),
+                Integer.parseInt(split[2]),
+                promotion
+            );
+        }
     }
 }
