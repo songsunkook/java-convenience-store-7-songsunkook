@@ -8,6 +8,12 @@ import store.dto.StocksResponse;
 
 public class OutputView {
 
+    private static final String TOTAL_PRICE = "총구매액";
+    private static final String DISCOUNT_PROMOTION = "행사할인";
+    private static final String DISCOUNT_MEMBERSHIP = "멤버십할인";
+    private static final String PAYMENT = "내실돈";
+    private static final String DISCOUNT_MONEY_PREFIX = "-";
+
     private StringBuilder buffer;
 
     public OutputView() {
@@ -74,14 +80,18 @@ public class OutputView {
 
     private void printReceiptTotalPrice(ReceiptResponse response) {
         print(RECEIPT_LINE.getMessage());
-        print(RECEIPT_MONEY_WITH_COUNT.getMessage("총구매액", response.orders().size(), response.totalPrice()));
-        print(RECEIPT_DISCOUNT_MONEY.getMessage("행사할인", discountMoneyMessage(response.promotionDiscount())));
-        print(RECEIPT_DISCOUNT_MONEY.getMessage("멤버십할인", discountMoneyMessage(response.membershipDiscount())));
-        print(RECEIPT_MONEY.getMessage("내실돈", response.payment()));
+        print(RECEIPT_MONEY_WITH_COUNT.getMessage(
+            TOTAL_PRICE, response.orders().size(), response.totalPrice()));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage(
+            DISCOUNT_PROMOTION, discountMoneyMessage(response.promotionDiscount())));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage(
+            DISCOUNT_MEMBERSHIP, discountMoneyMessage(response.membershipDiscount())));
+        print(RECEIPT_MONEY.getMessage(
+            PAYMENT, response.payment()));
     }
 
     private String discountMoneyMessage(int discount) {
-        return "-" + discount;
+        return DISCOUNT_MONEY_PREFIX + discount;
     }
 
     public void inputRerun() {
