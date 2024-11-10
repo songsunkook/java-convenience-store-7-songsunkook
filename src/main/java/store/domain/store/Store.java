@@ -7,7 +7,6 @@ import store.domain.customer.Customer;
 public class Store {
 
     private final Stocks stocks = new Stocks();
-    // private final Cashier cashier = new Cashier();
 
     public void addStock(Stock stock) {
         stocks.add(stock);

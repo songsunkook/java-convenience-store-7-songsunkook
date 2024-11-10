@@ -11,13 +11,16 @@ public class Stocks {
     public void add(Stock stock) {
         stocks.add(stock);
     }
+
     public void prepareOpen() {
         List<Stock> onlyPromotionStocks = stocks.stream()
             .filter(Stock::isPromotioning)
             .filter(promotioningStock -> !containsNormalStock(promotioningStock))
             .toList();
-        onlyPromotionStocks.forEach(promotioningStock ->
-            stocks.add(Stock.normalEmptyStockFrom(promotioningStock)));
+        onlyPromotionStocks.forEach(promotioningStock -> {
+            int index = stocks.indexOf(promotioningStock) + 1;
+            stocks.add(index, Stock.normalEmptyStockFrom(promotioningStock));
+        });
     }
 
     private boolean containsNormalStock(Stock promotioningStock) {
