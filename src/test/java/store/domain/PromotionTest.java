@@ -72,11 +72,6 @@ class PromotionTest {
         store.buy(customer, "콜라", 2);
         assertThat(customer.getNotices().size()).isEqualTo(1);
         assertThat(customer.getNotices().get(0).getType()).isEqualTo(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY);
-
-        // TODO: 수정. 증정의 경우에만 안내한다. 2+1 상품을 1개 가져오면 안내하면안됨. 2개 가져와야 1개 증정 여부 물음
-
-        // 구입확정 로직. 나중에 필요할 곳이 있을 것
-        // customer.answer(new Notice(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY, stock, 0));
     }
 
     @Test
