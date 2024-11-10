@@ -8,18 +8,19 @@ import store.domain.notice.Notice;
 
 public class NoticeRepository {
 
-    private final Map<Integer, Notice> db = new HashMap<>();
-    private int autoIncrement = 1;
+    private static final int DEFAULT_AUTO_INCREMENT = 1;
 
-    public Notice save(Notice notice) {
+    private final Map<Integer, Notice> db = new HashMap<>();
+    private int autoIncrement = DEFAULT_AUTO_INCREMENT;
+
+    public void save(Notice notice) {
         if (db.containsKey(notice.getId())) {
             db.replace(notice.getId(), notice);
-            return notice;
+            return;
         }
         db.put(autoIncrement, notice);
         notice.save(autoIncrement);
         autoIncrement++;
-        return notice;
     }
 
     public Notice findById(int id) {

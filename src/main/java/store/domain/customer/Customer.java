@@ -10,6 +10,8 @@ import store.domain.store.Stock;
 
 public class Customer {
 
+    private static final int NO_BONUS = 0;
+
     private final Orders orders = new Orders();
     private final Notices notices = new Notices();
     private Membership membership = new Membership(false);
@@ -32,14 +34,14 @@ public class Customer {
                     formattedNotice.getFreeBonusQuantity(), true);
                 return;
             }
-            order(formattedNotice.getStock(), formattedNotice.getFreeBonusQuantity(), 0, false);
+            order(formattedNotice.getStock(), formattedNotice.getFreeBonusQuantity(), NO_BONUS, false);
             return;
         }
 
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
             CantPromotionNotice formattedNotice = (CantPromotionNotice)notice;
             if (answer) {
-                order(formattedNotice.getNormalStock(), formattedNotice.getQuantity(), 0, false);
+                order(formattedNotice.getNormalStock(), formattedNotice.getQuantity(), NO_BONUS, false);
             }
         }
     }

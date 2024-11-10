@@ -1,5 +1,6 @@
 package store.domain.store;
 
+import static store.constant.StoreConstant.MINIMUM_STOCK_QUANTITY;
 import static store.domain.notice.NoticeType.CANT_PROMOTION_SOME_STOCKS;
 import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
 
@@ -11,6 +12,8 @@ import store.exception.argument.QuantityOutOfRangeException;
 import store.exception.argument.StockNotFoundException;
 
 public class Cashier {
+
+    private static final int NO_BONUS = 0;
 
     private final Stocks stocks;
     private final Customer customer;
@@ -30,7 +33,6 @@ public class Cashier {
         onPromotion = findStockByNameAndPromotionIs(requestName, true);
         notPromotionStock = findStockByNameAndPromotionIs(requestName, false);
         leftRequestQuantity = requestQuantity;
-
         calculateIfNotFinish(this::requestIsBiggerThanPromotionQuantity);
         calculateIfNotFinish(this::requestInPromotionQuantity);
         calculateIfNotFinish(this::onlyHaveNormalStock);
@@ -40,7 +42,7 @@ public class Cashier {
         if (stocks.findByName(name).isEmpty()) {
             throw new StockNotFoundException();
         }
-        if (quantity <= 0) {
+        if (quantity < MINIMUM_STOCK_QUANTITY) {
             throw new QuantityOutOfRangeException();
         }
     }
@@ -53,7 +55,7 @@ public class Cashier {
         int dropQuantityToNormal =
             leftRequestQuantity / onPromotion.getPromotion().buyAndGet() * onPromotion.getPromotion().buyAndGet();
         if (onPromotion.getQuantity() > dropQuantityToNormal) {
-            buyStock(customer, onPromotion, onPromotion.getQuantity() - dropQuantityToNormal, 0, false);
+            buyStock(customer, onPromotion, onPromotion.getQuantity() - dropQuantityToNormal, NO_BONUS, false);
         }
         sendNotice(CANT_PROMOTION_SOME_STOCKS, notPromotionStock, dropQuantityToNormal);
         finishCalculate = true;
@@ -77,9 +79,13 @@ public class Cashier {
         buyStock(customer, onPromotion, buyCount, buyCount / promotion.buyAndGet() * promotion.getGet(),
             true);
         leftRequestQuantity -= buyCount;
-        if (leftRequestQuantity == 0) {
+        if (noLeftQuantity()) {
             finishCalculate = true;
         }
+    }
+
+    private boolean noLeftQuantity() {
+        return leftRequestQuantity == 0;
     }
 
     private void onlyHaveNormalStock() {
@@ -88,7 +94,7 @@ public class Cashier {
             notPromotionStock.getQuantity() < leftRequestQuantity) {
             throw new OverStockQuantityException();
         }
-        buyStock(customer, notPromotionStock, leftRequestQuantity, 0, false);
+        buyStock(customer, notPromotionStock, leftRequestQuantity, NO_BONUS, false);
         finishCalculate = true;
     }
 
