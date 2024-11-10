@@ -23,7 +23,7 @@ public class OutputView {
             .map(stock -> STOCK.getMessage(
                 stock.getName(),
                 stock.getPrice(),
-                stock.getQuantity() == 0 ? "재고 없음" : stock.getQuantity(),
+                stock.getQuantity() == 0 ? "재고 없음" : stock.getQuantity() + "개",
                 stock.getPromotion() == null ? "" : stock.getPromotion().getName()
             ))
             .forEach(this::print);
@@ -51,8 +51,8 @@ public class OutputView {
         response.bonusOrders().forEach(order -> print(RECEIPT_BONUS_STOCK.getMessage(order.name(), order.quantity())));
         print(RECEIPT_LINE.getMessage());
         print(RECEIPT_MONEY_WITH_COUNT.getMessage("총구매액", response.orders().size(), response.totalPrice()));
-        print(RECEIPT_DISCOUNT_MONEY.getMessage("행사할인", response.promotionDiscount()));
-        print(RECEIPT_DISCOUNT_MONEY.getMessage("멤버십할인", response.membershipDiscount()));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage("행사할인", "-" + response.promotionDiscount()));
+        print(RECEIPT_DISCOUNT_MONEY.getMessage("멤버십할인", "-" + response.membershipDiscount()));
         print(RECEIPT_MONEY.getMessage("내실돈", response.payment()));
         flush();
     }

@@ -10,21 +10,21 @@ public enum OutputMessage {
      * - 콜라 1,000원 10개 탄산2+1
      * - 콜라 1,000원 10개
      */
-    STOCK("- %s %s원 %s개 %s%n"),
+    STOCK("- %s %s원 %s %s%n"),
     INPUT_ORDERS("%n구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])%n"),
     MEMBERSHIP_CONDITION("%n멤버십 할인을 받으시겠습니까? (Y/N)%n"),
     MORE_BUY("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)%n"),
-    RECEIPT("""
+    RECEIPT(String.format("""
         %n==============W 편의점================
-        상품명\t\t수량\t\t금액
-        """),
-    RECEIPT_STOCK("%-10s\t\t%4s\t\t%7s%n"),
+        %-10s%20s%20s
+        """, "상품명", "수량", "금액")),
+    RECEIPT_STOCK("%-10s%20s%30s%n"),
     RECEIPT_BONUS("=============증	정===============%n"),
-    RECEIPT_BONUS_STOCK("%-10s\t%4s%n"),
+    RECEIPT_BONUS_STOCK("%-10s%20s%n"),
     RECEIPT_LINE("====================================%n"),
-    RECEIPT_MONEY_WITH_COUNT("%-6s\t\t%4s\t\t%7s%n"),
-    RECEIPT_MONEY("%-6s\t\t%s%n"),
-    RECEIPT_DISCOUNT_MONEY("%-6s\t\t-%s%n"),
+    RECEIPT_MONEY_WITH_COUNT("%-10s%20s%20s%n"),
+    RECEIPT_MONEY("%-10s%40s%n"),
+    RECEIPT_DISCOUNT_MONEY("%-10s%40s%n"),
     RERUN("%n감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)%n"),
     ;
     /**
