@@ -1,7 +1,5 @@
 package store.domain.store;
 
-import java.util.Objects;
-
 import camp.nextstep.edu.missionutils.DateTimes;
 
 public class Stock {
@@ -47,10 +45,6 @@ public class Stock {
         return promotion.bonus(buyQuantity);
     }
 
-    public boolean equalsName(String name) {
-        return Objects.equals(this.name, name);
-    }
-
     public boolean isPromotioning() {
         if (promotion == null) {
             return false;
@@ -72,5 +66,9 @@ public class Stock {
             return promotion.getBuy() - buyQuantity;
         }
         return -1;
+    }
+
+    public boolean isEmpty() {
+        return quantity == 0;
     }
 }

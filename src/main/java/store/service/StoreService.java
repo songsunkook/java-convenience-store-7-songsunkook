@@ -24,7 +24,7 @@ public class StoreService {
     public void preSetting() {
         promotions = FileParser.readPromotions();
         FileParser.readProducts(promotions).forEach(store::addStock);
-        store.readyStocks();
+        store.prepareOpen();
     }
 
     public void newCustomer() {

@@ -14,8 +14,8 @@ public class Customer {
     private final Notices notices = new Notices();
     private Membership membership = new Membership(false);
 
-    public void notice(NoticeType noticeType, Stock target, int quantity) {
-        notices.add(noticeType, target, quantity);
+    public void notice(Notice notice) {
+        notices.add(notice);
     }
 
     public void order(Stock stock, int quantity, int bonusQuantity, boolean isPromotioning) {
