@@ -9,56 +9,65 @@ import store.dto.NoticeResponse;
 import store.dto.OrderRequest;
 import store.dto.ReceiptResponse;
 import store.dto.StocksResponse;
+import store.repository.CustomerRepository;
 import store.repository.NoticeRepository;
+import store.repository.StoreRepository;
 import store.util.FileParser;
 
 public class StoreService {
 
     private final NoticeRepository noticeRepository = new NoticeRepository();
-
-    private Customer customer = new Customer();
-    private Store store = new Store();
+    private final StoreRepository storeRepository = new StoreRepository();
+    private final CustomerRepository customerRepository = new CustomerRepository();
 
     public void preSetting() {
+        Store store = storeRepository.get();
         store.addPromotions(FileParser.readPromotions());
         FileParser.readProducts(store.getPromotions()).forEach(store::addStock);
         store.prepareOpen();
     }
 
     public void newCustomer() {
-        customer = new Customer();
+        customerRepository.reset();
     }
 
     public StocksResponse stocks() {
-        customer = new Customer();
+        Store store = storeRepository.get();
         return new StocksResponse(store.getStocks());
     }
 
     public void order(List<OrderRequest> orders) {
+        Store store = storeRepository.get();
+        Customer customer = customerRepository.get();
         orders.forEach(request -> store.buy(customer, request.name(), request.quantity()));
         noticeRepository.saveAllByCustomer(customer);
     }
 
     public boolean hasNotice() {
+        Customer customer = customerRepository.get();
         return customer.hasNotice();
     }
 
     public NoticeResponse nextNotice() {
+        Customer customer = customerRepository.get();
         Notice nextNotice = customer.popNotice();
         return NoticeResponse.from(nextNotice);
     }
 
     public void noticeAnswer(int noticeId, boolean confirm) {
+        Customer customer = customerRepository.get();
         Notice notice = noticeRepository.findById(noticeId);
         customer.noticeAnswer(notice, confirm);
         noticeRepository.remove(notice);
     }
 
     public void membershipAnswer(boolean confirm) {
+        Customer customer = customerRepository.get();
         customer.useMembership(confirm);
     }
 
     public ReceiptResponse receipt() {
+        Customer customer = customerRepository.get();
         return ReceiptResponse.from(customer);
     }
 }
