@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Promotion {
-    // name,buy,get,start_date,end_date
     private final String name;
     private final int buy;
     private final int get;

@@ -41,6 +41,9 @@ public class Stock {
     }
 
     public int bonus() {
+        if (promotion == null) {
+            throw new IllegalStateException("프로모션중이지 않은 재고에 대한 증정품 요청");
+        }
         return promotion.bonus(buyQuantity);
     }
 

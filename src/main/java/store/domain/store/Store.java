@@ -93,14 +93,12 @@ public class Store {
     }
 
     public void readyStocks() {
-        List<Stock> promotioningStocks = stocks.stream()
+        List<Stock> onlyPromotionStocks = stocks.stream()
             .filter(Stock::isPromotioning)
-            .toList();
-        promotioningStocks.stream()
             .filter(promotioningStock -> !containsNormalStock(promotioningStock))
-            .forEach(promotioningStock -> {
-                stocks.add(Stock.normalEmptyStockFrom(promotioningStock));
-            });
+            .toList();
+        onlyPromotionStocks.forEach(promotioningStock ->
+            stocks.add(Stock.normalEmptyStockFrom(promotioningStock)));
     }
 
     private boolean containsNormalStock(Stock promotioningStock) {

@@ -49,8 +49,7 @@ public class Customer {
     }
 
     public int payment() {
-        int totalPrice = getTotalPrice();
-        return totalPrice - getMembershipDiscount() - getPromotionDiscount();
+        return getTotalPrice() - getMembershipDiscount() - getPromotionDiscount();
     }
 
     private int getPromotionTotalPrice() {
