@@ -5,6 +5,7 @@ public enum ExceptionMessage {
     STORE_ILLEGAL_ARGUMENT("잘못된 입력입니다.", IllegalArgumentException.class),
     INVALID_INPUT_FORMAT("올바르지 않은 형식으로 입력했습니다.", IllegalArgumentException.class),
     STOCK_NOT_FOUND("존재하지 않는 상품입니다.", IllegalArgumentException.class),
+    QUANTITY_OUT_OF_RANGE("상품 수량은 1 이상이어야 합니다.", IllegalArgumentException.class),
     OVER_STOCK_QUANTITY("재고 수량을 초과하여 구매할 수 없습니다.", IllegalArgumentException.class),
 
     STORE_ILLEGAL_STATE("잘못된 상황에 대한 요청입니다.", IllegalStateException.class),

@@ -7,6 +7,8 @@ import store.domain.customer.Customer;
 import store.domain.notice.Notice;
 import store.domain.notice.NoticeType;
 import store.exception.argument.OverStockQuantityException;
+import store.exception.argument.QuantityOutOfRangeException;
+import store.exception.argument.StockNotFoundException;
 
 public class Cashier {
 
@@ -23,6 +25,7 @@ public class Cashier {
     }
 
     public void calculate(String requestName, int requestQuantity) {
+        validate(requestName, requestQuantity);
         finishCalculate = false;
         onPromotion = findStockByNameAndPromotionIs(requestName, true);
         notPromotionStock = findStockByNameAndPromotionIs(requestName, false);
@@ -31,6 +34,15 @@ public class Cashier {
         calculateIfNotFinish(this::requestIsBiggerThanPromotionQuantity);
         calculateIfNotFinish(this::requestInPromotionQuantity);
         calculateIfNotFinish(this::onlyHaveNormalStock);
+    }
+
+    private void validate(String name, int quantity) {
+        if (stocks.findByName(name).isEmpty()) {
+            throw new StockNotFoundException();
+        }
+        if (quantity <= 0) {
+            throw new QuantityOutOfRangeException();
+        }
     }
 
     private void requestIsBiggerThanPromotionQuantity() {
