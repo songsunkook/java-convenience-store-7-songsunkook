@@ -21,10 +21,10 @@ public class OutputView {
     public void showStocks(StocksResponse response) {
         response.stocks().stream()
             .map(stock -> STOCK.getMessage(
-                stock.getName(),
-                stock.getPrice(),
-                stock.getQuantity() == 0 ? "재고 없음" : stock.getQuantity() + "개",
-                stock.getPromotion() == null ? "" : stock.getPromotion().getName()
+                stock.name(),
+                stock.price(),
+                stock.outputQuantity() + "개",
+                stock.promotion()
             ))
             .forEach(this::print);
         flush();

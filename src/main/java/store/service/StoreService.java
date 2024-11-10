@@ -33,7 +33,7 @@ public class StoreService {
 
     public StocksResponse stocks() {
         Store store = storeRepository.get();
-        return new StocksResponse(store.getStocks());
+        return StocksResponse.of(store.getStocks());
     }
 
     public void order(List<OrderRequest> orders) {
