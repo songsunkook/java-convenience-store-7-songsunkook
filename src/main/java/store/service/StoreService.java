@@ -4,7 +4,6 @@ import java.util.List;
 
 import store.domain.customer.Customer;
 import store.domain.notice.Notice;
-import store.domain.store.Promotion;
 import store.domain.store.Store;
 import store.dto.NoticeResponse;
 import store.dto.OrderRequest;
@@ -19,11 +18,10 @@ public class StoreService {
 
     private Customer customer = new Customer();
     private Store store = new Store();
-    private List<Promotion> promotions;
 
     public void preSetting() {
-        promotions = FileParser.readPromotions();
-        FileParser.readProducts(promotions).forEach(store::addStock);
+        store.addPromotions(FileParser.readPromotions());
+        FileParser.readProducts(store.getPromotions()).forEach(store::addStock);
         store.prepareOpen();
     }
 

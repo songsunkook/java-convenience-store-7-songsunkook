@@ -7,6 +7,7 @@ import store.domain.customer.Customer;
 public class Store {
 
     private final Stocks stocks = new Stocks();
+    private final Promotions promotions = new Promotions();
 
     public void addStock(Stock stock) {
         stocks.add(stock);
@@ -36,5 +37,13 @@ public class Store {
 
     public void prepareOpen() {
         stocks.prepareOpen();
+    }
+
+    public void addPromotions(List<Promotion> promotions) {
+        this.promotions.addAll(promotions);
+    }
+
+    public List<Promotion> getPromotions() {
+        return promotions.get();
     }
 }
