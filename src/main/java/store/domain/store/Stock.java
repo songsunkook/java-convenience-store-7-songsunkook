@@ -24,7 +24,7 @@ public class Stock {
 
     public void buy(int quantity) {
         if (this.quantity < quantity) {
-            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+            throw new IllegalStateException("재고 부족한 상황에 초과된 요청");
         }
         this.quantity -= quantity;
         buyQuantity += quantity;
