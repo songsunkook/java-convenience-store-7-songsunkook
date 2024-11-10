@@ -13,6 +13,7 @@ public enum ExceptionMessage {
 
     STORE_ILLEGAL_STATE("잘못된 상황에 대한 요청입니다.", IllegalStateException.class),
     INVALID_FILE("잘못된 File에 대한 요청입니다.", IllegalStateException.class),
+    INVALID_FILE_FORMAT("잘못된 File Format입니다.", IllegalStateException.class),
     INVALID_NOTICE_TYPE("잘못된 NoticeType에 대한 요청입니다.", IllegalStateException.class),
     INVALID_PROMOTION("잘못된 Promotion에 대한 요청입니다.", IllegalStateException.class),
     REQUEST_BONUS_FOR_NON_PROMOTIONAL_STOCK("프로모션중이지 않은 재고에 대한 보너스 요청입니다.", IllegalStateException.class),

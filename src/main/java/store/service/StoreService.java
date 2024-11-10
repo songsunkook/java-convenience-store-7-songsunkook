@@ -23,7 +23,7 @@ public class StoreService {
     public void preSetting() {
         Store store = storeRepository.get();
         store.addPromotions(FileParser.readPromotions());
-        FileParser.readProducts(store.getPromotions()).forEach(store::addStock);
+        FileParser.readStocks(store.getPromotions()).forEach(store::addStock);
         store.prepareOpen();
     }
 

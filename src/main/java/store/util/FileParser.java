@@ -9,21 +9,31 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 import store.domain.store.Promotion;
 import store.domain.store.Stock;
 import store.exception.state.InvalidFileException;
+import store.exception.state.InvalidFileFormatException;
 import store.exception.state.InvalidPromotionException;
 
 public class FileParser {
 
     private static final String PROMOTION_FILE_PATH = "src/main/resources/promotions.md";
-    private static final String PRODUCT_FILE_PATH = "src/main/resources/products.md";
+    private static final String STOCK_FILE_PATH = "src/main/resources/products.md";
 
     private static final String DELIMITER = ",";
     private static final String EMPTY_PROMOTION = "null";
 
     private FileParser() {
+    }
+
+    public static List<Promotion> readPromotions() {
+        return readFile(PROMOTION_FILE_PATH, FileParser::readPromotion);
+    }
+
+    public static List<Stock> readStocks(List<Promotion> promotions) {
+        return readFile(STOCK_FILE_PATH, line -> readStock(line, promotions));
     }
 
     private static FileReader openFile(String path) {
@@ -35,18 +45,23 @@ public class FileParser {
         }
     }
 
-    public static List<Promotion> readPromotions() {
-        FileReader fileReader = openFile(PROMOTION_FILE_PATH);
-        List<Promotion> promotions = new ArrayList<>();
+    private static <T> List<T> readFile(String filePath, Function<String, T> lineParser) {
+        FileReader fileReader = openFile(filePath);
         try (BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-            String line = bufferedReader.readLine();
-            while ((line = bufferedReader.readLine()) != null) {
-                promotions.add(readPromotion(line));
-            }
+            return parseFile(lineParser, bufferedReader);
         } catch (IOException e) {
-
+            throw new InvalidFileFormatException();
         }
-        return promotions;
+    }
+
+    private static <T> List<T> parseFile(Function<String, T> lineParser, BufferedReader bufferedReader)
+        throws IOException {
+        List<T> result = new ArrayList<>();
+        String line = bufferedReader.readLine(); // Skip File Header
+        while ((line = bufferedReader.readLine()) != null) {
+            result.add(lineParser.apply(line));
+        }
+        return result;
     }
 
     private static Promotion readPromotion(String line) {
@@ -60,21 +75,7 @@ public class FileParser {
         );
     }
 
-    public static List<Stock> readProducts(List<Promotion> promotions) {
-        FileReader fileReader = openFile(PRODUCT_FILE_PATH);
-        List<Stock> stocks = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-            String line = bufferedReader.readLine();
-            while ((line = bufferedReader.readLine()) != null) {
-                stocks.add(readProduct(line, promotions));
-            }
-        } catch (IOException e) {
-
-        }
-        return stocks;
-    }
-
-    private static Stock readProduct(String line, List<Promotion> promotions) {
+    private static Stock readStock(String line, List<Promotion> promotions) {
         String[] split = line.split(DELIMITER);
         if (Objects.equals(split[3], EMPTY_PROMOTION)) {
             FileStock fileStock = FileStock.of(split, null);
