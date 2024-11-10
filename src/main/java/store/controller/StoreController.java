@@ -1,5 +1,6 @@
 package store.controller;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import store.dto.NoticeResponse;
@@ -51,9 +52,13 @@ public class StoreController {
     private void notice() {
         while (storeService.hasNotice()) {
             NoticeResponse response = storeService.nextNotice();
-            outputView.notice(response);
-            storeService.noticeAnswer(response.id(), InputView.confirm());
+            process(this::processSingleNotice, response);
         }
+    }
+
+    private void processSingleNotice(NoticeResponse response) {
+        outputView.notice(response);
+        storeService.noticeAnswer(response.id(), InputView.confirm());
     }
 
     private void noticeMembership() {
@@ -76,6 +81,15 @@ public class StoreController {
         } catch (IllegalArgumentException e) {
             outputView.exception(e);
             process(action);
+        }
+    }
+
+    private <T> void process(Consumer<T> action, T arg) {
+        try {
+            action.accept(arg);
+        } catch (IllegalArgumentException e) {
+            outputView.exception(e);
+            process(action, arg);
         }
     }
 

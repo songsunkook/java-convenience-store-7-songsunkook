@@ -6,10 +6,10 @@ import java.util.Objects;
 
 import camp.nextstep.edu.missionutils.Console;
 import store.dto.OrderRequest;
+import store.exception.argument.InvalidInputFormatException;
 
 public class InputView {
 
-    // [콜라-3],[에너지바-5]
     public static List<OrderRequest> orders() {
         return Arrays.stream(input().split(","))
             .map(OrderRequest::from)
@@ -17,7 +17,14 @@ public class InputView {
     }
 
     public static boolean confirm() {
-        return Objects.equals(Console.readLine(), "Y");
+        String input = Console.readLine();
+        if (Objects.equals(input, "Y")) {
+            return true;
+        }
+        if (Objects.equals(input, "N")) {
+            return false;
+        }
+        throw new InvalidInputFormatException();
     }
 
     private static String input() {
