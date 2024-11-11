@@ -108,9 +108,10 @@ public class Cashier {
             throw new OverStockQuantityException();
         }
         if (hasOnPromotionStock) {
-            buyStock(customer, onPromotionStock, Math.min(leftRequestQuantity, onPromotionStock.getQuantity()), NO_BONUS,
+            int useQuantity = onPromotionStock.getQuantity();
+            buyStock(customer, onPromotionStock, Math.min(leftRequestQuantity, useQuantity), NO_BONUS,
                 false);
-            leftRequestQuantity -= onPromotionStock.getQuantity();
+            leftRequestQuantity -= useQuantity;
         }
         buyStock(customer, noPromotionStock, leftRequestQuantity, NO_BONUS, false);
         finishCalculate = true;
