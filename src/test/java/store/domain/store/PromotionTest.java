@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.store;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -9,9 +9,6 @@ import org.junit.jupiter.api.Test;
 import camp.nextstep.edu.missionutils.DateTimes;
 import store.domain.customer.Customer;
 import store.domain.notice.NoticeType;
-import store.domain.store.Promotion;
-import store.domain.store.Stock;
-import store.domain.store.Store;
 
 class PromotionTest {
 

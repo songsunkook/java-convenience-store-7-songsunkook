@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.customer;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import store.domain.customer.Customer;
 import store.domain.store.Promotion;
 import store.domain.store.Stock;
 import store.domain.store.Store;
