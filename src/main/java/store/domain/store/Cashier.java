@@ -95,10 +95,22 @@ public class Cashier {
     }
 
     private void onlyHaveNormalStock() {
-        if (noPromotionStock == null ||
-            noPromotionStock.isEmpty() ||
-            noPromotionStock.getQuantity() < leftRequestQuantity) {
+        int totalQuantity = 0;
+        boolean hasOnPromotionStock = false;
+        if (noPromotionStock != null) {
+            totalQuantity += noPromotionStock.getQuantity();
+        }
+        if (onPromotionStock != null) {
+            hasOnPromotionStock = true;
+            totalQuantity += onPromotionStock.getQuantity();
+        }
+        if (totalQuantity < leftRequestQuantity) {
             throw new OverStockQuantityException();
+        }
+        if (hasOnPromotionStock) {
+            buyStock(customer, onPromotionStock, Math.min(leftRequestQuantity, onPromotionStock.getQuantity()), NO_BONUS,
+                false);
+            leftRequestQuantity -= onPromotionStock.getQuantity();
         }
         buyStock(customer, noPromotionStock, leftRequestQuantity, NO_BONUS, false);
         finishCalculate = true;
@@ -140,6 +152,8 @@ public class Cashier {
     }
 
     private void buyStock(Customer customer, Stock stock, int quantity, int bonusQuantity, boolean onPromotion) {
-        customer.order(stock, quantity, bonusQuantity, onPromotion);
+        if (quantity > 0) {
+            customer.order(stock, quantity, bonusQuantity, onPromotion);
+        }
     }
 }

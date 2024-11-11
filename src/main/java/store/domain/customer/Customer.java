@@ -35,7 +35,7 @@ public class Customer {
                     formattedNotice.getFreeBonusQuantity(), true);
                 return;
             }
-            order(formattedNotice.getStock(), formattedNotice.getFreeBonusQuantity(), NO_BONUS, false);
+            order(formattedNotice.getStock(), formattedNotice.getQuantity(), NO_BONUS, false);
             return;
         }
 
