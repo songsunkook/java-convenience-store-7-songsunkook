@@ -28,7 +28,6 @@ public class Customer {
     }
 
     public void noticeAnswer(Notice notice, boolean answer) {
-        //TODO: 메서드 분리
         if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
             FreePromotionNotice formattedNotice = (FreePromotionNotice)notice;
             if (answer) {
