@@ -52,12 +52,15 @@ public class Cashier {
             return;
         }
         validateRequestOverTotalQuantity(leftRequestQuantity);
+        int promotionSetCount = onPromotionStock.getQuantity() / onPromotionStock.getPromotion().buyAndGet();
         int dropQuantityToNormal =
-            leftRequestQuantity / onPromotionStock.getPromotion().buyAndGet() * onPromotionStock.getPromotion().buyAndGet();
-        if (onPromotionStock.getQuantity() > dropQuantityToNormal) {
-            buyStock(customer, onPromotionStock, onPromotionStock.getQuantity() - dropQuantityToNormal, NO_BONUS, false);
-        }
-        sendNotice(CANT_PROMOTION_SOME_STOCKS, noPromotionStock, dropQuantityToNormal);
+            onPromotionStock.getQuantity() % onPromotionStock.getPromotion().buyAndGet() +
+                leftRequestQuantity - onPromotionStock.getQuantity();
+        buyStock(customer, onPromotionStock, Math.min(onPromotionStock.getQuantity(),
+                promotionSetCount * onPromotionStock.getPromotion().buyAndGet()),
+            promotionSetCount * onPromotionStock.getPromotion().getGet(),
+            true);
+        sendNotice(CANT_PROMOTION_SOME_STOCKS, onPromotionStock, noPromotionStock, dropQuantityToNormal);
         finishCalculate = true;
     }
 
@@ -66,7 +69,8 @@ public class Cashier {
             return;
         }
         int noPromotionCount = leftRequestQuantity % onPromotionStock.getPromotion().buyAndGet();
-        if (noPromotionCount == onPromotionStock.getPromotion().getBuy()) {
+        if (noPromotionCount == onPromotionStock.getPromotion().getBuy() &&
+            onPromotionStock.getQuantity() >= leftRequestQuantity + onPromotionStock.getPromotion().getGet()) {
             sendNotice(CAN_PROMOTION_WITH_MORE_QUANTITY, onPromotionStock, leftRequestQuantity);
             finishCalculate = true;
             return;
@@ -76,11 +80,13 @@ public class Cashier {
         int buyCount =
             leftRequestQuantity / promotion.buyAndGet() * promotion
                 .buyAndGet();
-        buyStock(customer, onPromotionStock, buyCount, buyCount / promotion.buyAndGet() * promotion.getGet(),
-            true);
-        leftRequestQuantity -= buyCount;
-        if (noLeftQuantity()) {
-            finishCalculate = true;
+        if (buyCount > 0) {
+            buyStock(customer, onPromotionStock, buyCount, buyCount / promotion.buyAndGet() * promotion.getGet(),
+                true);
+            leftRequestQuantity -= buyCount;
+            if (noLeftQuantity()) {
+                finishCalculate = true;
+            }
         }
     }
 
@@ -118,8 +124,12 @@ public class Cashier {
         }
     }
 
-    private void sendNotice(NoticeType noticeType, Stock stock, int dropQuantityToNormal) {
-        customer.notice(Notice.of(noticeType, stock, dropQuantityToNormal));
+    private void sendNotice(NoticeType noticeType, Stock stock, int quantity) {
+        customer.notice(Notice.of(noticeType, stock, quantity));
+    }
+
+    private void sendNotice(NoticeType noticeType, Stock stock1, Stock stock2, int quantity) {
+        customer.notice(Notice.of(noticeType, stock1, stock2, quantity));
     }
 
     private Stock findStockByNameAndPromotionIs(String name, boolean onPromotion) {

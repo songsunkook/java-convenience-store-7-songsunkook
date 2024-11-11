@@ -30,7 +30,8 @@ public class Customer {
         if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
             FreePromotionNotice formattedNotice = (FreePromotionNotice)notice;
             if (answer) {
-                order(formattedNotice.getStock(), formattedNotice.getQuantity() + formattedNotice.getFreeBonusQuantity(),
+                order(formattedNotice.getStock(),
+                    formattedNotice.getQuantity() + formattedNotice.getFreeBonusQuantity(),
                     formattedNotice.getFreeBonusQuantity(), true);
                 return;
             }
@@ -41,7 +42,13 @@ public class Customer {
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
             CantPromotionNotice formattedNotice = (CantPromotionNotice)notice;
             if (answer) {
-                order(formattedNotice.getNormalStock(), formattedNotice.getQuantity(), NO_BONUS, false);
+                int noPromotionBuyQuantity = Math.min(formattedNotice.getNoPromotionStock().getQuantity(),
+                    formattedNotice.getQuantity());
+                order(formattedNotice.getNoPromotionStock(), noPromotionBuyQuantity, NO_BONUS, false);
+                int leftQuantity = formattedNotice.getQuantity() - noPromotionBuyQuantity;
+                if (leftQuantity > 0) {
+                    order(formattedNotice.getOnPromotionStock(), leftQuantity, NO_BONUS, false);
+                }
             }
         }
     }

@@ -18,8 +18,12 @@ public interface Notice {
         if (noticeType == CAN_PROMOTION_WITH_MORE_QUANTITY) {
             return new FreePromotionNotice(noticeType, stock, quantity, stock.getPromotion().getGet());
         }
+        throw new InvalidNoticeTypeException();
+    }
+
+    static Notice of(NoticeType noticeType, Stock onPromotionStock, Stock noPromotionStock, int quantity) {
         if (noticeType == CANT_PROMOTION_SOME_STOCKS) {
-            return new CantPromotionNotice(noticeType, stock, quantity);
+            return new CantPromotionNotice(noticeType, onPromotionStock, noPromotionStock, quantity);
         }
         throw new InvalidNoticeTypeException();
     }
