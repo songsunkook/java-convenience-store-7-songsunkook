@@ -39,11 +39,33 @@ public class Cashier {
     }
 
     private void validate(String name, int quantity) {
+        validateStockName(name);
+        validateOutOfRangeQuantity(quantity);
+        validateRequestOverTotalQuantity(leftRequestQuantity);
+    }
+
+    private void validateStockName(String name) {
         if (stocks.findByName(name).isEmpty()) {
             throw new StockNotFoundException();
         }
+    }
+
+    private static void validateOutOfRangeQuantity(int quantity) {
         if (quantity < MINIMUM_STOCK_QUANTITY) {
             throw new QuantityOutOfRangeException();
+        }
+    }
+
+    private void validateRequestOverTotalQuantity(int requestQuantity) {
+        int totalQuantity = 0;
+        if (onPromotionStock != null) {
+            totalQuantity += onPromotionStock.getQuantity();
+        }
+        if (noPromotionStock != null) {
+            totalQuantity += noPromotionStock.getQuantity();
+        }
+        if (totalQuantity < requestQuantity) {
+            throw new OverStockQuantityException();
         }
     }
 
@@ -51,14 +73,9 @@ public class Cashier {
         if (onPromotionStock == null || onPromotionStock.getQuantity() >= leftRequestQuantity) {
             return;
         }
-        validateRequestOverTotalQuantity(leftRequestQuantity);
-        int promotionSetCount = onPromotionStock.getQuantity() / onPromotionStock.getPromotion().buyAndGet();
         int dropQuantityToNormal =
             onPromotionStock.getQuantity() % onPromotionStock.getPromotion().buyAndGet() +
                 leftRequestQuantity - onPromotionStock.getQuantity();
-        // buyStock(customer, onPromotionStock, onPromotionStock.getQuantity(),
-        //     promotionSetCount * onPromotionStock.getPromotion().getGet(),
-        //     true);
         sendNotice(CANT_PROMOTION_SOME_STOCKS, onPromotionStock, noPromotionStock, leftRequestQuantity,
             dropQuantityToNormal);
         finishCalculate = true;
@@ -122,19 +139,6 @@ public class Cashier {
             return;
         }
         runnable.run();
-    }
-
-    private void validateRequestOverTotalQuantity(int requestQuantity) {
-        int totalQuantity = 0;
-        if (onPromotionStock != null) {
-            totalQuantity += onPromotionStock.getQuantity();
-        }
-        if (noPromotionStock != null) {
-            totalQuantity += noPromotionStock.getQuantity();
-        }
-        if (totalQuantity < requestQuantity) {
-            throw new OverStockQuantityException();
-        }
     }
 
     private void sendNotice(NoticeType noticeType, Stock stock, int quantity) {

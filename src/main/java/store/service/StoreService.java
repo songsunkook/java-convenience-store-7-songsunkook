@@ -39,6 +39,8 @@ public class StoreService {
     public void order(List<OrderRequest> orders) {
         Store store = storeRepository.get();
         Customer customer = customerRepository.get();
+        // validate
+
         orders.forEach(request -> store.buy(customer, request.name(), request.quantity()));
         noticeRepository.saveAllByCustomer(customer);
     }
