@@ -93,9 +93,9 @@ public class StoreController {
         }
     }
 
-    private boolean processAndGet(Supplier action) {
+    private boolean processAndGet(Supplier<Boolean> action) {
         try {
-            return (boolean)action.get();
+            return action.get();
         } catch (IllegalArgumentException e) {
             outputView.exception(e);
             return processAndGet(action);
