@@ -21,8 +21,10 @@ public class Customer {
     }
 
     public void order(Stock stock, int quantity, int bonusQuantity, boolean onPromotion) {
-        orders.add(new Order(stock, quantity, bonusQuantity, onPromotion));
-        stock.buy(quantity);
+        if (quantity > 0) {
+            orders.add(new Order(stock, quantity, bonusQuantity, onPromotion));
+            stock.buy(quantity);
+        }
     }
 
     public void noticeAnswer(Notice notice, boolean answer) {
@@ -42,12 +44,12 @@ public class Customer {
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
             CantPromotionNotice formattedNotice = (CantPromotionNotice)notice;
             if (answer) {
-                int noPromotionBuyQuantity = Math.min(formattedNotice.getNoPromotionStock().getQuantity(),
+                int onPromotionBuyQuantity = Math.min(formattedNotice.getOnPromotionStock().getQuantity(),
                     formattedNotice.getQuantity());
-                order(formattedNotice.getNoPromotionStock(), noPromotionBuyQuantity, NO_BONUS, false);
-                int leftQuantity = formattedNotice.getQuantity() - noPromotionBuyQuantity;
+                order(formattedNotice.getOnPromotionStock(), formattedNotice.getOnPromotionStock().getQuantity(), NO_BONUS, false);
+                int leftQuantity = formattedNotice.getQuantity() - onPromotionBuyQuantity;
                 if (leftQuantity > 0) {
-                    order(formattedNotice.getOnPromotionStock(), leftQuantity, NO_BONUS, false);
+                    order(formattedNotice.getNoPromotionStock(), leftQuantity, NO_BONUS, false);
                 }
             }
         }

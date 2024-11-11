@@ -56,10 +56,9 @@ public class Cashier {
         int dropQuantityToNormal =
             onPromotionStock.getQuantity() % onPromotionStock.getPromotion().buyAndGet() +
                 leftRequestQuantity - onPromotionStock.getQuantity();
-        buyStock(customer, onPromotionStock, Math.min(onPromotionStock.getQuantity(),
-                promotionSetCount * onPromotionStock.getPromotion().buyAndGet()),
-            promotionSetCount * onPromotionStock.getPromotion().getGet(),
-            true);
+        // buyStock(customer, onPromotionStock, onPromotionStock.getQuantity(),
+        //     promotionSetCount * onPromotionStock.getPromotion().getGet(),
+        //     true);
         sendNotice(CANT_PROMOTION_SOME_STOCKS, onPromotionStock, noPromotionStock, dropQuantityToNormal);
         finishCalculate = true;
     }
@@ -153,8 +152,6 @@ public class Cashier {
     }
 
     private void buyStock(Customer customer, Stock stock, int quantity, int bonusQuantity, boolean onPromotion) {
-        if (quantity > 0) {
-            customer.order(stock, quantity, bonusQuantity, onPromotion);
-        }
+        customer.order(stock, quantity, bonusQuantity, onPromotion);
     }
 }
