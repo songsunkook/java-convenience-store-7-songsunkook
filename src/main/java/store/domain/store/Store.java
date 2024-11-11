@@ -13,6 +13,10 @@ public class Store {
         stocks.add(stock);
     }
 
+    public void validateStocks(String name, int quantity) {
+        stocks.validate(name, quantity);
+    }
+
     public void buy(Customer customer, String stockName, int stockQuantity) {
         Cashier cashier = new Cashier(stocks, customer);
         cashier.calculate(stockName, stockQuantity);

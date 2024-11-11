@@ -1,8 +1,14 @@
 package store.domain.store;
 
+import static store.constant.StoreConstant.MINIMUM_STOCK_QUANTITY;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import store.exception.argument.OverStockQuantityException;
+import store.exception.argument.QuantityOutOfRangeException;
+import store.exception.argument.StockNotFoundException;
 
 public class Stocks {
 
@@ -36,5 +42,39 @@ public class Stocks {
 
     public List<Stock> get() {
         return stocks;
+    }
+
+    public void validate(String name, int quantity) {
+        validateStockName(name);
+        validateOutOfRangeQuantity(quantity);
+        validateRequestOverTotalQuantity(name, quantity);
+    }
+
+    private void validateStockName(String name) {
+        if (findByName(name).isEmpty()) {
+            throw new StockNotFoundException();
+        }
+    }
+
+    private static void validateOutOfRangeQuantity(int quantity) {
+        if (quantity < MINIMUM_STOCK_QUANTITY) {
+            throw new QuantityOutOfRangeException();
+        }
+    }
+
+    private void validateRequestOverTotalQuantity(String name, int requestQuantity) {
+        int totalQuantity = findByName(name).stream()
+            .mapToInt(Stock::getQuantity)
+            .sum();
+        if (totalQuantity < requestQuantity) {
+            throw new OverStockQuantityException();
+        }
+    }
+
+    public Stock findByNameAndPromotion(String name, boolean onPromotion) {
+        return findByName(name).stream()
+            .filter(stock -> stock.onPromotion() == onPromotion)
+            .findAny()
+            .orElse(null);
     }
 }

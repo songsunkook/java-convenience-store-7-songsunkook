@@ -1,6 +1,5 @@
 package store.domain.store;
 
-import static store.constant.StoreConstant.MINIMUM_STOCK_QUANTITY;
 import static store.domain.notice.NoticeType.CANT_PROMOTION_SOME_STOCKS;
 import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
 
@@ -8,8 +7,6 @@ import store.domain.customer.Customer;
 import store.domain.notice.Notice;
 import store.domain.notice.NoticeType;
 import store.exception.argument.OverStockQuantityException;
-import store.exception.argument.QuantityOutOfRangeException;
-import store.exception.argument.StockNotFoundException;
 
 public class Cashier {
 
@@ -28,45 +25,13 @@ public class Cashier {
     }
 
     public void calculate(String requestName, int requestQuantity) {
-        validate(requestName, requestQuantity);
         finishCalculate = false;
-        onPromotionStock = findStockByNameAndPromotionIs(requestName, true);
-        noPromotionStock = findStockByNameAndPromotionIs(requestName, false);
+        onPromotionStock = stocks.findByNameAndPromotion(requestName, true);
+        noPromotionStock = stocks.findByNameAndPromotion(requestName, false);
         leftRequestQuantity = requestQuantity;
         calculateIfNotFinish(this::requestIsBiggerThanPromotionQuantity);
         calculateIfNotFinish(this::requestInPromotionQuantity);
         calculateIfNotFinish(this::onlyHaveNormalStock);
-    }
-
-    private void validate(String name, int quantity) {
-        validateStockName(name);
-        validateOutOfRangeQuantity(quantity);
-        validateRequestOverTotalQuantity(leftRequestQuantity);
-    }
-
-    private void validateStockName(String name) {
-        if (stocks.findByName(name).isEmpty()) {
-            throw new StockNotFoundException();
-        }
-    }
-
-    private static void validateOutOfRangeQuantity(int quantity) {
-        if (quantity < MINIMUM_STOCK_QUANTITY) {
-            throw new QuantityOutOfRangeException();
-        }
-    }
-
-    private void validateRequestOverTotalQuantity(int requestQuantity) {
-        int totalQuantity = 0;
-        if (onPromotionStock != null) {
-            totalQuantity += onPromotionStock.getQuantity();
-        }
-        if (noPromotionStock != null) {
-            totalQuantity += noPromotionStock.getQuantity();
-        }
-        if (totalQuantity < requestQuantity) {
-            throw new OverStockQuantityException();
-        }
     }
 
     private void requestIsBiggerThanPromotionQuantity() {
@@ -148,13 +113,6 @@ public class Cashier {
     private void sendNotice(NoticeType noticeType, Stock stock1, Stock stock2, int totalQuantity,
         int noPromotionQuantity) {
         customer.notice(Notice.of(noticeType, stock1, stock2, totalQuantity, noPromotionQuantity));
-    }
-
-    private Stock findStockByNameAndPromotionIs(String name, boolean onPromotion) {
-        return stocks.findByName(name).stream()
-            .filter(stock -> stock.onPromotion() == onPromotion)
-            .findAny()
-            .orElse(null);
     }
 
     private void buyStock(Customer customer, Stock stock, int quantity, int bonusQuantity, boolean onPromotion) {
