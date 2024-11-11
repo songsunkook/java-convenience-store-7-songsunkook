@@ -19,7 +19,7 @@ public class Orders {
 
     public int promotionTotalPrice() {
         return orders.stream()
-            .filter(Order::isPromotioning)
+            .filter(Order::getOnPromotion)
             .mapToInt(order -> order.getQuantity() * order.price())
             .sum();
     }

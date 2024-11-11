@@ -18,8 +18,8 @@ public class Cashier {
     private final Stocks stocks;
     private final Customer customer;
     private boolean finishCalculate;
-    private Stock onPromotion;
-    private Stock notPromotionStock;
+    private Stock onPromotionStock;
+    private Stock noPromotionStock;
     private int leftRequestQuantity;
 
     public Cashier(Stocks stocks, Customer customer) {
@@ -30,8 +30,8 @@ public class Cashier {
     public void calculate(String requestName, int requestQuantity) {
         validate(requestName, requestQuantity);
         finishCalculate = false;
-        onPromotion = findStockByNameAndPromotionIs(requestName, true);
-        notPromotionStock = findStockByNameAndPromotionIs(requestName, false);
+        onPromotionStock = findStockByNameAndPromotionIs(requestName, true);
+        noPromotionStock = findStockByNameAndPromotionIs(requestName, false);
         leftRequestQuantity = requestQuantity;
         calculateIfNotFinish(this::requestIsBiggerThanPromotionQuantity);
         calculateIfNotFinish(this::requestInPromotionQuantity);
@@ -48,35 +48,35 @@ public class Cashier {
     }
 
     private void requestIsBiggerThanPromotionQuantity() {
-        if (onPromotion == null || onPromotion.getQuantity() >= leftRequestQuantity) {
+        if (onPromotionStock == null || onPromotionStock.getQuantity() >= leftRequestQuantity) {
             return;
         }
         validateRequestOverTotalQuantity(leftRequestQuantity);
         int dropQuantityToNormal =
-            leftRequestQuantity / onPromotion.getPromotion().buyAndGet() * onPromotion.getPromotion().buyAndGet();
-        if (onPromotion.getQuantity() > dropQuantityToNormal) {
-            buyStock(customer, onPromotion, onPromotion.getQuantity() - dropQuantityToNormal, NO_BONUS, false);
+            leftRequestQuantity / onPromotionStock.getPromotion().buyAndGet() * onPromotionStock.getPromotion().buyAndGet();
+        if (onPromotionStock.getQuantity() > dropQuantityToNormal) {
+            buyStock(customer, onPromotionStock, onPromotionStock.getQuantity() - dropQuantityToNormal, NO_BONUS, false);
         }
-        sendNotice(CANT_PROMOTION_SOME_STOCKS, notPromotionStock, dropQuantityToNormal);
+        sendNotice(CANT_PROMOTION_SOME_STOCKS, noPromotionStock, dropQuantityToNormal);
         finishCalculate = true;
     }
 
     private void requestInPromotionQuantity() {
-        if (onPromotion == null) {
+        if (onPromotionStock == null) {
             return;
         }
-        int notPromotionCount = leftRequestQuantity % onPromotion.getPromotion().buyAndGet();
-        if (notPromotionCount == onPromotion.getPromotion().getBuy()) {
-            sendNotice(CAN_PROMOTION_WITH_MORE_QUANTITY, onPromotion, leftRequestQuantity);
+        int noPromotionCount = leftRequestQuantity % onPromotionStock.getPromotion().buyAndGet();
+        if (noPromotionCount == onPromotionStock.getPromotion().getBuy()) {
+            sendNotice(CAN_PROMOTION_WITH_MORE_QUANTITY, onPromotionStock, leftRequestQuantity);
             finishCalculate = true;
             return;
         }
 
-        Promotion promotion = onPromotion.getPromotion();
+        Promotion promotion = onPromotionStock.getPromotion();
         int buyCount =
             leftRequestQuantity / promotion.buyAndGet() * promotion
                 .buyAndGet();
-        buyStock(customer, onPromotion, buyCount, buyCount / promotion.buyAndGet() * promotion.getGet(),
+        buyStock(customer, onPromotionStock, buyCount, buyCount / promotion.buyAndGet() * promotion.getGet(),
             true);
         leftRequestQuantity -= buyCount;
         if (noLeftQuantity()) {
@@ -89,12 +89,12 @@ public class Cashier {
     }
 
     private void onlyHaveNormalStock() {
-        if (notPromotionStock == null ||
-            notPromotionStock.isEmpty() ||
-            notPromotionStock.getQuantity() < leftRequestQuantity) {
+        if (noPromotionStock == null ||
+            noPromotionStock.isEmpty() ||
+            noPromotionStock.getQuantity() < leftRequestQuantity) {
             throw new OverStockQuantityException();
         }
-        buyStock(customer, notPromotionStock, leftRequestQuantity, NO_BONUS, false);
+        buyStock(customer, noPromotionStock, leftRequestQuantity, NO_BONUS, false);
         finishCalculate = true;
     }
 
@@ -107,11 +107,11 @@ public class Cashier {
 
     private void validateRequestOverTotalQuantity(int requestQuantity) {
         int totalQuantity = 0;
-        if (onPromotion != null) {
-            totalQuantity += onPromotion.getQuantity();
+        if (onPromotionStock != null) {
+            totalQuantity += onPromotionStock.getQuantity();
         }
-        if (notPromotionStock != null) {
-            totalQuantity += notPromotionStock.getQuantity();
+        if (noPromotionStock != null) {
+            totalQuantity += noPromotionStock.getQuantity();
         }
         if (totalQuantity < requestQuantity) {
             throw new OverStockQuantityException();
@@ -122,14 +122,14 @@ public class Cashier {
         customer.notice(Notice.of(noticeType, stock, dropQuantityToNormal));
     }
 
-    private Stock findStockByNameAndPromotionIs(String name, boolean promotioning) {
+    private Stock findStockByNameAndPromotionIs(String name, boolean onPromotion) {
         return stocks.findByName(name).stream()
-            .filter(stock -> stock.isPromotioning() == promotioning)
+            .filter(stock -> stock.onPromotion() == onPromotion)
             .findAny()
             .orElse(null);
     }
 
-    private void buyStock(Customer customer, Stock stock, int quantity, int bonusQuantity, boolean isPromotioning) {
-        customer.order(stock, quantity, bonusQuantity, isPromotioning);
+    private void buyStock(Customer customer, Stock stock, int quantity, int bonusQuantity, boolean onPromotion) {
+        customer.order(stock, quantity, bonusQuantity, onPromotion);
     }
 }

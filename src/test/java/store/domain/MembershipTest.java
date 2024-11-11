@@ -27,10 +27,10 @@ class MembershipTest {
     @Test
     void 프로모션_미적용_금액에_대해_할인한다() {
         Promotion promotion = new Promotion("탄산2+1", 2, 1, LocalDate.of(2024, 01, 01), LocalDate.of(2024, 12, 31));
-        Stock notPromotionStock = new Stock("아이스크림", 1000, 10, null);
+        Stock noPromotionStock = new Stock("아이스크림", 1000, 10, null);
         Stock promotionStock = new Stock("콜라", 1000, 10, promotion);
         Store store = new Store();
-        store.addStock(notPromotionStock);
+        store.addStock(noPromotionStock);
         store.addStock(promotionStock);
         Customer customer = new Customer();
         store.buy(customer, "콜라", 9);
@@ -43,10 +43,10 @@ class MembershipTest {
     void 프로모션_적용_후_남은_금액에_대해_할인한다() {
         Promotion promotion = new Promotion("탄산2+1", 2, 1, LocalDate.of(2024, 01, 01), LocalDate.of(2024, 12, 31));
         Stock promotionStock = new Stock("콜라", 1000, 10, promotion);
-        Stock notPromotionStock = new Stock("콜라", 1000, 10, null);
+        Stock noPromotionStock = new Stock("콜라", 1000, 10, null);
         Store store = new Store();
         store.addStock(promotionStock);
-        store.addStock(notPromotionStock);
+        store.addStock(noPromotionStock);
         Customer customer = new Customer();
         store.buy(customer, "콜라", 4);
         customer.useMembership(true);
@@ -55,9 +55,9 @@ class MembershipTest {
 
     @Test
     void 멤버십_할인의_최대_한도는_8000원이다() {
-        Stock notPromotionStock = new Stock("콜라", 1000, 100, null);
+        Stock noPromotionStock = new Stock("콜라", 1000, 100, null);
         Store store = new Store();
-        store.addStock(notPromotionStock);
+        store.addStock(noPromotionStock);
         Customer customer = new Customer();
         store.buy(customer, "콜라", 100);
         customer.useMembership(true);

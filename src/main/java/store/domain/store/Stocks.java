@@ -14,18 +14,18 @@ public class Stocks {
 
     public void prepareOpen() {
         List<Stock> onlyPromotionStocks = stocks.stream()
-            .filter(Stock::isPromotioning)
-            .filter(promotioningStock -> !containsNormalStock(promotioningStock))
+            .filter(Stock::onPromotion)
+            .filter(onPromotionStock -> !containsNormalStock(onPromotionStock))
             .toList();
-        onlyPromotionStocks.forEach(promotioningStock -> {
-            int index = stocks.indexOf(promotioningStock) + 1;
-            stocks.add(index, Stock.normalEmptyStockFrom(promotioningStock));
+        onlyPromotionStocks.forEach(onPromotionStock -> {
+            int index = stocks.indexOf(onPromotionStock) + 1;
+            stocks.add(index, Stock.normalEmptyStockFrom(onPromotionStock));
         });
     }
 
-    private boolean containsNormalStock(Stock promotioningStock) {
-        return findByName(promotioningStock.getName()).stream()
-            .anyMatch(stock -> !stock.isPromotioning());
+    private boolean containsNormalStock(Stock onPromotionStock) {
+        return findByName(onPromotionStock.getName()).stream()
+            .anyMatch(stock -> !stock.onPromotion());
     }
 
     public List<Stock> findByName(String stockName) {

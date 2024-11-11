@@ -20,8 +20,8 @@ public class Customer {
         notices.add(notice);
     }
 
-    public void order(Stock stock, int quantity, int bonusQuantity, boolean isPromotioning) {
-        orders.add(new Order(stock, quantity, bonusQuantity, isPromotioning));
+    public void order(Stock stock, int quantity, int bonusQuantity, boolean onPromotion) {
+        orders.add(new Order(stock, quantity, bonusQuantity, onPromotion));
         stock.buy(quantity);
     }
 

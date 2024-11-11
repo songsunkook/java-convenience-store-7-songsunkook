@@ -2,7 +2,7 @@ package store.domain.store;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import store.exception.argument.OverStockQuantityException;
-import store.exception.state.RequestBonusForNonPromotionalStock;
+import store.exception.state.RequestBonusForNoPromotionStock;
 
 public class Stock {
 
@@ -20,8 +20,8 @@ public class Stock {
         buyQuantity = 0;
     }
 
-    public static Stock normalEmptyStockFrom(Stock promotioningStock) {
-        return new Stock(promotioningStock.name, promotioningStock.price, 0, null);
+    public static Stock normalEmptyStockFrom(Stock onPromotion) {
+        return new Stock(onPromotion.name, onPromotion.price, 0, null);
     }
 
     public void buy(int quantity) {
@@ -42,12 +42,12 @@ public class Stock {
 
     public int bonus() {
         if (promotion == null) {
-            throw new RequestBonusForNonPromotionalStock();
+            throw new RequestBonusForNoPromotionStock();
         }
         return promotion.bonus(buyQuantity);
     }
 
-    public boolean isPromotioning() {
+    public boolean onPromotion() {
         if (promotion == null) {
             return false;
         }
