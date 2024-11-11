@@ -6,6 +6,8 @@ import store.exception.state.RequestBonusForNoPromotionStock;
 
 public class Stock {
 
+    private static final int EMPTY_QUANTITY = 0;
+
     private final String name;
     private int price;
     private int quantity;
@@ -17,11 +19,11 @@ public class Stock {
         this.price = price;
         this.quantity = quantity;
         this.promotion = promotion;
-        buyQuantity = 0;
+        buyQuantity = EMPTY_QUANTITY;
     }
 
     public static Stock normalEmptyStockFrom(Stock onPromotion) {
-        return new Stock(onPromotion.name, onPromotion.price, 0, null);
+        return new Stock(onPromotion.name, onPromotion.price, EMPTY_QUANTITY, null);
     }
 
     public void buy(int quantity) {
@@ -63,6 +65,6 @@ public class Stock {
     }
 
     public boolean isEmpty() {
-        return quantity == 0;
+        return quantity == EMPTY_QUANTITY;
     }
 }

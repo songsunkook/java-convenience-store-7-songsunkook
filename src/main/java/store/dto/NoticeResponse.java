@@ -15,23 +15,29 @@ public record NoticeResponse(
 
     public static NoticeResponse from(Notice notice) {
         if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
-            FreePromotionNotice freePromotionNotice = (FreePromotionNotice)notice;
-            return new NoticeResponse(
-                freePromotionNotice.getId(),
-                freePromotionNotice.getType(),
-                freePromotionNotice.getStock().getName(),
-                freePromotionNotice.getFreeBonusQuantity()
-            );
+            return getResponseFrom((FreePromotionNotice)notice);
         }
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
-            CantPromotionNotice cantPromotionNotice = (CantPromotionNotice)notice;
-            return new NoticeResponse(
-                cantPromotionNotice.getId(),
-                cantPromotionNotice.getType(),
-                cantPromotionNotice.getStockName(),
-                cantPromotionNotice.getNoPromotionQuantity()
-            );
+            return getResponseFrom((CantPromotionNotice)notice);
         }
         throw new InvalidNoticeTypeException();
+    }
+
+    private static NoticeResponse getResponseFrom(FreePromotionNotice notice) {
+        return new NoticeResponse(
+            notice.getId(),
+            notice.getType(),
+            notice.getStock().getName(),
+            notice.getFreeBonusQuantity()
+        );
+    }
+
+    private static NoticeResponse getResponseFrom(CantPromotionNotice notice) {
+        return new NoticeResponse(
+            notice.getId(),
+            notice.getType(),
+            notice.getStockName(),
+            notice.getNoPromotionQuantity()
+        );
     }
 }
