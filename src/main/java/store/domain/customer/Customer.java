@@ -61,12 +61,13 @@ public class Customer {
 
     private int buyOnPromotionStock(CantPromotionNotice notice) {
         Promotion promotion = notice.getOnPromotionStock().getPromotion();
-        int possibleOnPromotionQuantity = Math.min(notice.getOnPromotionStock().getQuantity(),
-            notice.getOrderedTotalQuantity());
-        int bonusQuantity = possibleOnPromotionQuantity / promotion.buyAndGet() * promotion.getGet();
-
-        order(notice.getOnPromotionStock(), notice.getOrderedOnPromotionQuantity(), bonusQuantity, true);
-        return possibleOnPromotionQuantity;
+        int possibleQuantity = Math.min(notice.getOnPromotionStock().getQuantity(),
+            notice.getOrderedOnPromotionQuantity());
+        int buySetCount = possibleQuantity / promotion.buyAndGet();
+        int buyQuantity = Math.min(possibleQuantity, buySetCount * promotion.buyAndGet());
+        int bonusQuantity = buySetCount * promotion.getGet();
+        order(notice.getOnPromotionStock(), buyQuantity, bonusQuantity, true);
+        return buyQuantity;
     }
 
     private void buyAnyStock(CantPromotionNotice notice, int leftQuantity) {
