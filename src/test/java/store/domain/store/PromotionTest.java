@@ -53,7 +53,7 @@ class PromotionTest {
         store.addStock(stock2);
         Customer customer = new Customer();
         store.buy(customer, "콜라", 3);
-        customer.noticeAnswer(customer.getNotices().get(0), true);
+        customer.answer(customer.getNotices().get(0), true);
         assertThat(stock2.getQuantity()).isEqualTo(10 - 3);
     }
 

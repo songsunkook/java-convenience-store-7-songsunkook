@@ -37,7 +37,7 @@ public record NoticeResponse(
             notice.getId(),
             notice.getType(),
             notice.getStockName(),
-            notice.getNoPromotionQuantity()
+            notice.getOrderedNoPromotionQuantity()
         );
     }
 }

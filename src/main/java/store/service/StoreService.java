@@ -58,7 +58,7 @@ public class StoreService {
     public void noticeAnswer(int noticeId, boolean confirm) {
         Customer customer = customerRepository.get();
         Notice notice = noticeRepository.findById(noticeId);
-        customer.noticeAnswer(notice, confirm);
+        customer.answer(notice, confirm);
         noticeRepository.remove(notice);
     }
 

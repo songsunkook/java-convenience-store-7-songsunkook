@@ -6,7 +6,9 @@ import store.domain.notice.CantPromotionNotice;
 import store.domain.notice.FreePromotionNotice;
 import store.domain.notice.Notice;
 import store.domain.notice.NoticeType;
+import store.domain.store.Promotion;
 import store.domain.store.Stock;
+import store.exception.state.InvalidNoticeTypeException;
 
 public class Customer {
 
@@ -27,36 +29,53 @@ public class Customer {
         }
     }
 
-    public void noticeAnswer(Notice notice, boolean answer) {
+    public void answer(Notice notice, boolean answer) {
         if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
-            FreePromotionNotice formattedNotice = (FreePromotionNotice)notice;
-            if (answer) {
-                order(formattedNotice.getStock(),
-                    formattedNotice.getQuantity() + formattedNotice.getFreeBonusQuantity(),
-                    formattedNotice.getFreeBonusQuantity(), true);
-                return;
-            }
-            order(formattedNotice.getStock(), formattedNotice.getQuantity(), NO_BONUS, false);
+            answerFreePromotionNotice((FreePromotionNotice)notice, answer);
             return;
         }
-
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
-            CantPromotionNotice formattedNotice = (CantPromotionNotice)notice;
-            int onPromotionBuyQuantity = Math.min(formattedNotice.getOnPromotionStock().getQuantity(),
-                formattedNotice.getTotalQuantity());
-            order(formattedNotice.getOnPromotionStock(), formattedNotice.getPromotionQuantity(),
-                onPromotionBuyQuantity / formattedNotice.getOnPromotionStock().getPromotion().buyAndGet()
-                    * formattedNotice.getOnPromotionStock().getPromotion().getGet(), true);
-            int leftQuantity = formattedNotice.getTotalQuantity() - onPromotionBuyQuantity;
-            if (answer) {
-                order(formattedNotice.getOnPromotionStock(),
-                    Math.min(formattedNotice.getOnPromotionStock().getQuantity(), leftQuantity), NO_BONUS, false);
-                leftQuantity -= formattedNotice.getOnPromotionStock().getQuantity();
-                if (leftQuantity > 0) {
-                    order(formattedNotice.getNoPromotionStock(), leftQuantity, NO_BONUS, false);
-                }
-            }
+            answerCantPromotionNotice((CantPromotionNotice)notice, answer);
+            return;
         }
+        throw new InvalidNoticeTypeException();
+    }
+
+    private void answerFreePromotionNotice(FreePromotionNotice notice, boolean answer) {
+        if (answer) {
+            order(notice.getStock(),
+                notice.getQuantity() + notice.getFreeBonusQuantity(),
+                notice.getFreeBonusQuantity(), true);
+            return;
+        }
+        order(notice.getStock(), notice.getQuantity(), NO_BONUS, false);
+    }
+
+    private void answerCantPromotionNotice(CantPromotionNotice notice, boolean answer) {
+        int onPromotionBuyQuantity = buyOnPromotionStock(notice);
+        int leftQuantity = notice.getOrderedTotalQuantity() - onPromotionBuyQuantity;
+        if (answer) {
+            buyAnyStock(notice, leftQuantity);
+        }
+    }
+
+    private int buyOnPromotionStock(CantPromotionNotice notice) {
+        Promotion promotion = notice.getOnPromotionStock().getPromotion();
+        int possibleOnPromotionQuantity = Math.min(notice.getOnPromotionStock().getQuantity(),
+            notice.getOrderedTotalQuantity());
+        int bonusQuantity = possibleOnPromotionQuantity / promotion.buyAndGet() * promotion.getGet();
+
+        order(notice.getOnPromotionStock(), notice.getOrderedOnPromotionQuantity(), bonusQuantity, true);
+        return possibleOnPromotionQuantity;
+    }
+
+    private void buyAnyStock(CantPromotionNotice notice, int leftQuantity) {
+        int onPromotionQuantity = notice.getOnPromotionStock().getQuantity();
+        int possibleOnPromotionQuantity = Math.min(onPromotionQuantity, leftQuantity);
+
+        order(notice.getOnPromotionStock(), possibleOnPromotionQuantity, NO_BONUS, false);
+        leftQuantity -= onPromotionQuantity;
+        order(notice.getNoPromotionStock(), leftQuantity, NO_BONUS, false);
     }
 
     public void useMembership(boolean membership) {
