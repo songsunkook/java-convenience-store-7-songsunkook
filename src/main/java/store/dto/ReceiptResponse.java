@@ -44,6 +44,12 @@ public record ReceiptResponse(
             .toList();
     }
 
+    public int totalQuantity() {
+        return orders.stream()
+            .mapToInt(InnerOrder::quantity)
+            .sum();
+    }
+
     public record InnerOrder(
         String name,
         int quantity,

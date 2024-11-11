@@ -81,13 +81,12 @@ public class OutputView {
     private void printReceiptTotalPrice(ReceiptResponse response) {
         print(RECEIPT_LINE.getMessage());
         print(RECEIPT_MONEY_WITH_COUNT.getMessage(
-            TOTAL_PRICE, response.orders().size(), response.totalPrice()));
+            TOTAL_PRICE, response.totalQuantity(), response.totalPrice()));
         print(RECEIPT_DISCOUNT_MONEY.getMessage(
             DISCOUNT_PROMOTION, discountMoneyMessage(response.promotionDiscount())));
         print(RECEIPT_DISCOUNT_MONEY.getMessage(
             DISCOUNT_MEMBERSHIP, discountMoneyMessage(response.membershipDiscount())));
-        print(RECEIPT_MONEY.getMessage(
-            PAYMENT, response.payment()));
+        print(RECEIPT_MONEY.getMessage(PAYMENT, response.payment()));
     }
 
     private String discountMoneyMessage(int discount) {
