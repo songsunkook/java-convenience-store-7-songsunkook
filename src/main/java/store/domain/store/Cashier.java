@@ -59,7 +59,8 @@ public class Cashier {
         // buyStock(customer, onPromotionStock, onPromotionStock.getQuantity(),
         //     promotionSetCount * onPromotionStock.getPromotion().getGet(),
         //     true);
-        sendNotice(CANT_PROMOTION_SOME_STOCKS, onPromotionStock, noPromotionStock, dropQuantityToNormal);
+        sendNotice(CANT_PROMOTION_SOME_STOCKS, onPromotionStock, noPromotionStock, leftRequestQuantity,
+            dropQuantityToNormal);
         finishCalculate = true;
     }
 
@@ -140,8 +141,9 @@ public class Cashier {
         customer.notice(Notice.of(noticeType, stock, quantity));
     }
 
-    private void sendNotice(NoticeType noticeType, Stock stock1, Stock stock2, int quantity) {
-        customer.notice(Notice.of(noticeType, stock1, stock2, quantity));
+    private void sendNotice(NoticeType noticeType, Stock stock1, Stock stock2, int totalQuantity,
+        int noPromotionQuantity) {
+        customer.notice(Notice.of(noticeType, stock1, stock2, totalQuantity, noPromotionQuantity));
     }
 
     private Stock findStockByNameAndPromotionIs(String name, boolean onPromotion) {

@@ -43,11 +43,16 @@ public class Customer {
 
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
             CantPromotionNotice formattedNotice = (CantPromotionNotice)notice;
+            int onPromotionBuyQuantity = Math.min(formattedNotice.getOnPromotionStock().getQuantity(),
+                formattedNotice.getTotalQuantity());
+            order(formattedNotice.getOnPromotionStock(), formattedNotice.getPromotionQuantity(),
+                onPromotionBuyQuantity / formattedNotice.getOnPromotionStock().getPromotion().buyAndGet()
+                    * formattedNotice.getOnPromotionStock().getPromotion().getGet(), true);
+            int leftQuantity = formattedNotice.getTotalQuantity() - onPromotionBuyQuantity;
             if (answer) {
-                int onPromotionBuyQuantity = Math.min(formattedNotice.getOnPromotionStock().getQuantity(),
-                    formattedNotice.getQuantity());
-                order(formattedNotice.getOnPromotionStock(), formattedNotice.getOnPromotionStock().getQuantity(), NO_BONUS, false);
-                int leftQuantity = formattedNotice.getQuantity() - onPromotionBuyQuantity;
+                order(formattedNotice.getOnPromotionStock(),
+                    Math.min(formattedNotice.getOnPromotionStock().getQuantity(), leftQuantity), NO_BONUS, false);
+                leftQuantity -= formattedNotice.getOnPromotionStock().getQuantity();
                 if (leftQuantity > 0) {
                     order(formattedNotice.getNoPromotionStock(), leftQuantity, NO_BONUS, false);
                 }

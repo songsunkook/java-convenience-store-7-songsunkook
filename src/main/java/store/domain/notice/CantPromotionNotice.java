@@ -7,15 +7,18 @@ public class CantPromotionNotice implements Notice {
     private final NoticeType noticeType;
     private final Stock onPromotionStock;
     private final Stock noPromotionStock;
-    private final int quantity;
+    private final int totalQuantity;
+    private final int noPromotionQuantity;
 
     private Integer id;
 
-    public CantPromotionNotice(NoticeType noticeType, Stock onPromotionStock, Stock noPromotionStock, int quantity) {
+    public CantPromotionNotice(NoticeType noticeType, Stock onPromotionStock, Stock noPromotionStock, int totalQuantity,
+        int noPromotionQuantity) {
         this.noticeType = noticeType;
         this.onPromotionStock = onPromotionStock;
         this.noPromotionStock = noPromotionStock;
-        this.quantity = quantity;
+        this.totalQuantity = totalQuantity;
+        this.noPromotionQuantity = noPromotionQuantity;
     }
 
     @Override
@@ -45,7 +48,15 @@ public class CantPromotionNotice implements Notice {
         return onPromotionStock;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public int getNoPromotionQuantity() {
+        return noPromotionQuantity;
+    }
+
+    public int getPromotionQuantity() {
+        return totalQuantity - noPromotionQuantity;
     }
 }

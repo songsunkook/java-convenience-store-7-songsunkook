@@ -21,9 +21,10 @@ public interface Notice {
         throw new InvalidNoticeTypeException();
     }
 
-    static Notice of(NoticeType noticeType, Stock onPromotionStock, Stock noPromotionStock, int quantity) {
+    static Notice of(NoticeType noticeType, Stock onPromotionStock, Stock noPromotionStock,
+        int totalQuantity, int noPromotionQuantity) {
         if (noticeType == CANT_PROMOTION_SOME_STOCKS) {
-            return new CantPromotionNotice(noticeType, onPromotionStock, noPromotionStock, quantity);
+            return new CantPromotionNotice(noticeType, onPromotionStock, noPromotionStock, totalQuantity, noPromotionQuantity);
         }
         throw new InvalidNoticeTypeException();
     }

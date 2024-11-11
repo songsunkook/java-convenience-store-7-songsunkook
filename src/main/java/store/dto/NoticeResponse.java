@@ -29,7 +29,7 @@ public record NoticeResponse(
                 cantPromotionNotice.getId(),
                 cantPromotionNotice.getType(),
                 cantPromotionNotice.getStockName(),
-                cantPromotionNotice.getQuantity()
+                cantPromotionNotice.getNoPromotionQuantity()
             );
         }
         throw new InvalidNoticeTypeException();
