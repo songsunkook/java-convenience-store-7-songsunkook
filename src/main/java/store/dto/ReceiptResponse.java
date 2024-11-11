@@ -1,6 +1,7 @@
 package store.dto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import store.domain.customer.Customer;
 import store.domain.customer.Order;
@@ -28,6 +29,11 @@ public record ReceiptResponse(
     private static List<InnerOrder> getOrders(Customer customer) {
         return customer.getOrders().stream()
             .map(InnerOrder::normalFrom)
+            .collect(Collectors.toMap(
+                InnerOrder::name,
+                innerOrder -> innerOrder,
+                InnerOrder::combineOrders
+            )).values().stream()
             .toList();
     }
 
@@ -57,6 +63,14 @@ public record ReceiptResponse(
                 order.getStock().getName(),
                 order.getBonusQuantity(),
                 order.price() * order.getBonusQuantity()
+            );
+        }
+
+        public static InnerOrder combineOrders(InnerOrder o1, InnerOrder o2) {
+            return new InnerOrder(
+                o1.name,
+                o1.quantity + o2.quantity,
+                o1.price + o2.price
             );
         }
     }
