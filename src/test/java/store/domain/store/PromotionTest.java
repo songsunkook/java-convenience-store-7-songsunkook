@@ -66,7 +66,7 @@ class PromotionTest {
         Customer customer = new Customer();
         store.buy(customer, "콜라", 2);
         assertThat(customer.getNotices().size()).isEqualTo(1);
-        assertThat(customer.getNotices().get(0).getType()).isEqualTo(NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY);
+        assertThat(customer.getNotices().get(0).getType()).isEqualTo(NoticeType.CAN_GET_FREE_BONUS);
     }
 
     @Test

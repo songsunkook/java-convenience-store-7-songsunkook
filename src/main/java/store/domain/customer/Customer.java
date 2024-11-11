@@ -30,7 +30,7 @@ public class Customer {
     }
 
     public void answer(Notice notice, boolean answer) {
-        if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
+        if (notice.getType() == NoticeType.CAN_GET_FREE_BONUS) {
             answerFreePromotionNotice((FreePromotionNotice)notice, answer);
             return;
         }

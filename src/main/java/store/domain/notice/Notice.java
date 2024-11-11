@@ -1,7 +1,7 @@
 package store.domain.notice;
 
 import static store.domain.notice.NoticeType.CANT_PROMOTION_SOME_STOCKS;
-import static store.domain.notice.NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY;
+import static store.domain.notice.NoticeType.CAN_GET_FREE_BONUS;
 
 import store.domain.store.Stock;
 import store.exception.state.InvalidNoticeTypeException;
@@ -15,7 +15,7 @@ public interface Notice {
     NoticeType getType();
 
     static Notice of(NoticeType noticeType, Stock stock, int quantity) {
-        if (noticeType == CAN_PROMOTION_WITH_MORE_QUANTITY) {
+        if (noticeType == CAN_GET_FREE_BONUS) {
             return new FreePromotionNotice(noticeType, stock, quantity, stock.getPromotion().getGet());
         }
         throw new InvalidNoticeTypeException();

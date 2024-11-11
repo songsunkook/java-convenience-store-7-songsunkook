@@ -14,7 +14,7 @@ public record NoticeResponse(
 ) {
 
     public static NoticeResponse from(Notice notice) {
-        if (notice.getType() == NoticeType.CAN_PROMOTION_WITH_MORE_QUANTITY) {
+        if (notice.getType() == NoticeType.CAN_GET_FREE_BONUS) {
             return getResponseFrom((FreePromotionNotice)notice);
         }
         if (notice.getType() == NoticeType.CANT_PROMOTION_SOME_STOCKS) {
