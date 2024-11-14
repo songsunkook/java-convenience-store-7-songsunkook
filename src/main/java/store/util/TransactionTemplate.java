@@ -11,7 +11,6 @@ import store.view.OutputView;
 
 public class TransactionTemplate {
 
-    private Map<Repository, Collection<Object>> origin = new HashMap<>();
     private Map<Repository, Collection<Object>> beganData = new HashMap<>();
     private List<Repository> targetRepositories = new ArrayList<>();
 
@@ -42,26 +41,20 @@ public class TransactionTemplate {
     }
 
     private void begin() {
-        targetRepositories.forEach(targetRepository -> {
-            origin.put(targetRepository, (Collection<Object>)targetRepository.getOriginalCollection());
-            beganData.put(targetRepository, (Collection<Object>)targetRepository.getCopiedCollection());
-        });
+        targetRepositories.forEach(targetRepository ->
+            beganData.put(targetRepository, (Collection<Object>)targetRepository.getCopiedCollection()));
     }
 
     private void commit() {
-        origin = new HashMap<>();
         beganData = new HashMap<>();
     }
 
     private void rollback() {
         targetRepositories.forEach(targetRepository -> {
-            Collection<Object> originCollection = origin.get(targetRepository);
             Collection<Object> beganCollection = beganData.get(targetRepository);
 
-            if (originCollection != null && beganCollection != null) {
-                originCollection.clear();
-                originCollection.addAll(beganCollection);
-            }
+            targetRepository.clear();
+            targetRepository.addAll(beganCollection);
         });
     }
 }

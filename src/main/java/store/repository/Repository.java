@@ -2,9 +2,11 @@ package store.repository;
 
 import java.util.Collection;
 
-public interface Repository {
+public interface Repository<T> {
 
-    Collection<?> getOriginalCollection();
+    Collection<T> getCopiedCollection();
 
-    Collection<?> getCopiedCollection();
+    void clear();
+
+    void addAll(Collection<T> collection);
 }
