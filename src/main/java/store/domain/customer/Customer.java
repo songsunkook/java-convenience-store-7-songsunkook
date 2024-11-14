@@ -10,7 +10,7 @@ import store.domain.store.Promotion;
 import store.domain.store.Stock;
 import store.exception.state.InvalidNoticeTypeException;
 
-public class Customer {
+public class Customer implements Cloneable {
 
     private static final int NO_BONUS = 0;
 
@@ -117,5 +117,24 @@ public class Customer {
 
     public int getMembershipDiscount() {
         return membership.getDiscount(getTotalPrice() - getPromotionTotalPrice());
+    }
+
+    @Override
+    public Customer clone() {
+        try {
+            Customer clone = (Customer)super.clone();
+            // TODO: clone 이관
+            orders.getOrders().forEach(order -> clone.order(
+                order.getStock(),
+                order.getQuantity(),
+                order.getBonusQuantity(),
+                order.getOnPromotion()
+            ));
+            notices.getNotices().forEach(notice -> clone.notice(notice.clone()));
+            clone.useMembership(membership.inUse());
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

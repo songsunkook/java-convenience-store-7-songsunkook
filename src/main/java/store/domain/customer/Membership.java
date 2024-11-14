@@ -12,6 +12,10 @@ public class Membership {
         this.membership = membership;
     }
 
+    public boolean inUse() {
+        return membership;
+    }
+
     public Membership use(boolean membership) {
         return new Membership(membership);
     }

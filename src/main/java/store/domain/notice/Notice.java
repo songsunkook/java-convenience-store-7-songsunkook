@@ -6,13 +6,15 @@ import static store.domain.notice.NoticeType.CAN_GET_FREE_BONUS;
 import store.domain.store.Stock;
 import store.exception.state.InvalidNoticeTypeException;
 
-public interface Notice {
+public interface Notice extends Cloneable {
 
     void save(int id);
 
     Integer getId();
 
     NoticeType getType();
+
+    Notice clone();
 
     static Notice of(NoticeType noticeType, Stock stock, int quantity) {
         if (noticeType == CAN_GET_FREE_BONUS) {

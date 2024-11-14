@@ -44,4 +44,9 @@ public class FreePromotionNotice implements Notice {
     public int getFreeBonusQuantity() {
         return freeBonusQuantity;
     }
+
+    @Override
+    public FreePromotionNotice clone() {
+        return new FreePromotionNotice(noticeType, target, buyQuantity, freeBonusQuantity);
+    }
 }

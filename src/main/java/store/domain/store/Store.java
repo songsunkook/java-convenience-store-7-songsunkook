@@ -4,7 +4,7 @@ import java.util.List;
 
 import store.domain.customer.Customer;
 
-public class Store {
+public class Store implements Cloneable {
 
     private final Stocks stocks = new Stocks();
     private final Promotions promotions = new Promotions();
@@ -36,5 +36,27 @@ public class Store {
 
     public List<Promotion> getPromotions() {
         return promotions.get();
+    }
+
+    @Override
+    public Store clone() {
+        try {
+            Store clone = (Store)super.clone();
+            stocks.get().forEach(stock -> {
+                // TODO: Stock.clone으로 이관
+                Stock clonedStock = new Stock(
+                    stock.getName(),
+                    stock.getPrice(),
+                    stock.getQuantity(),
+                    stock.getPromotion()
+                );
+                addStock(clonedStock);
+            });
+            // TODO: 불변이긴해도 clone 이관
+            clone.addPromotions(promotions.get());
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
