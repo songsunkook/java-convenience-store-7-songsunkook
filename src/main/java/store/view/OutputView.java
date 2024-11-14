@@ -118,4 +118,8 @@ public class OutputView {
         buffer.append(content);
         flush();
     }
+
+    public static void transactionException(Exception e) {
+        System.out.print(e.getMessage());
+    }
 }
