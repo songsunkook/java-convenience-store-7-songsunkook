@@ -5,9 +5,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import store.repository.Repository;
-import store.view.OutputView;
 
 public class TransactionTemplate {
 
@@ -18,9 +19,9 @@ public class TransactionTemplate {
     }
 
     private static class TransactionTemplateHolder {
+
         private static final TransactionTemplate INSTANCE = new TransactionTemplate();
     }
-
     public static TransactionTemplate getInstance() {
         return TransactionTemplateHolder.INSTANCE;
     }
@@ -36,7 +37,30 @@ public class TransactionTemplate {
             commit();
         } catch (Exception e) {
             rollback();
-            OutputView.transactionException(e);
+            throw e;
+        }
+    }
+
+    public <T> void execute(Consumer<T> action, T arg) {
+        try {
+            begin();
+            action.accept(arg);
+            commit();
+        } catch (Exception e) {
+            rollback();
+            throw e;
+        }
+    }
+
+    public boolean executeAndGet(Supplier<Boolean> action) {
+        try {
+            begin();
+            Boolean result = action.get();
+            commit();
+            return result;
+        } catch (Exception e) {
+            rollback();
+            throw e;
         }
     }
 
