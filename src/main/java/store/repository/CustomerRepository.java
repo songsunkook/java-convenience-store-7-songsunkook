@@ -7,13 +7,16 @@ import store.domain.customer.Customer;
 
 public class CustomerRepository implements Repository<Customer> {
 
-    private Customer customer = new Customer();
+    private Customer customer;
 
     public void reset() {
         customer = new Customer();
     }
 
     public Customer get() {
+        if (customer == null) {
+            customer = new Customer();
+        }
         return customer;
     }
 

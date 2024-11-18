@@ -7,9 +7,12 @@ import store.domain.store.Store;
 
 public class StoreRepository implements Repository<Store> {
 
-    private Store store = new Store();
+    private Store store;
 
     public Store get() {
+        if (store == null) {
+            store = new Store();
+        }
         return store;
     }
 
