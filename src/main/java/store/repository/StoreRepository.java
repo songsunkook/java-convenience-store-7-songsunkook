@@ -18,6 +18,9 @@ public class StoreRepository implements Repository<Store> {
 
     @Override
     public Collection<Store> getCopiedCollection() {
+        if (store == null) {
+            return List.of();
+        }
         return List.of(Store.copyOf(store));
     }
 

@@ -62,6 +62,9 @@ public class CantPromotionNotice implements Notice {
     }
 
     public static CantPromotionNotice copyOf(CantPromotionNotice notice) {
+        if (notice == null) {
+            return null;
+        }
         return new CantPromotionNotice(
             notice.noticeType,
             notice.onPromotionStock,

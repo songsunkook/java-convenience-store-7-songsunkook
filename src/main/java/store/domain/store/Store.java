@@ -40,6 +40,9 @@ public class Store {
     }
 
     public static Store copyOf(Store store) {
+        if (store == null) {
+            return null;
+        }
         Store clone = new Store();
         store.stocks.get().forEach(stock -> clone.addStock(Stock.copyOf(stock)));
         clone.addPromotions(new ArrayList<>(store.promotions.get()));

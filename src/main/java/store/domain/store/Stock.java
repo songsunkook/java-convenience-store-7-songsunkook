@@ -69,6 +69,9 @@ public class Stock {
     }
 
     public static Stock copyOf(Stock stock) {
+        if (stock == null) {
+            return null;
+        }
         return new Stock(
             stock.getName(),
             stock.getPrice(),

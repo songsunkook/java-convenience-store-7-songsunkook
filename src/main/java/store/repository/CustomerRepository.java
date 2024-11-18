@@ -22,6 +22,9 @@ public class CustomerRepository implements Repository<Customer> {
 
     @Override
     public Collection<Customer> getCopiedCollection() {
+        if (customer == null) {
+            return List.of();
+        }
         return List.of(Customer.copyOf(customer));
     }
 

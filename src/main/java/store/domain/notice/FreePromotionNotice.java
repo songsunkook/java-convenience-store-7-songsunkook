@@ -46,6 +46,9 @@ public class FreePromotionNotice implements Notice {
     }
 
     public static FreePromotionNotice copyOf(FreePromotionNotice notice) {
+        if (notice == null) {
+            return null;
+        }
         return new FreePromotionNotice(
             notice.noticeType,
             notice.target,

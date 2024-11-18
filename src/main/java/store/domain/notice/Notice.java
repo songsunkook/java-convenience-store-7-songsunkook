@@ -30,6 +30,9 @@ public interface Notice {
     }
 
     static Notice copyOf(Notice notice) {
+        if (notice == null) {
+            return null;
+        }
         if (notice.getType().equals(CAN_GET_FREE_BONUS)) {
             return FreePromotionNotice.copyOf((FreePromotionNotice)notice);
         }
