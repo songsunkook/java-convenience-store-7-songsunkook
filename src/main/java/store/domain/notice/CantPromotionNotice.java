@@ -61,8 +61,13 @@ public class CantPromotionNotice implements Notice {
         return orderedTotalQuantity - orderedNoPromotionQuantity;
     }
 
-    @Override
-    public CantPromotionNotice clone() {
-        return new CantPromotionNotice(noticeType, onPromotionStock, noPromotionStock, orderedTotalQuantity, orderedNoPromotionQuantity);
+    public static CantPromotionNotice copyOf(CantPromotionNotice notice) {
+        return new CantPromotionNotice(
+            notice.noticeType,
+            notice.onPromotionStock,
+            notice.noPromotionStock,
+            notice.orderedTotalQuantity,
+            notice.orderedNoPromotionQuantity
+        );
     }
 }

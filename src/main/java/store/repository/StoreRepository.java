@@ -15,17 +15,17 @@ public class StoreRepository implements Repository<Store> {
 
     @Override
     public Collection<Store> getCopiedCollection() {
-        return List.of(store.clone());
+        return List.of(Store.copyOf(store));
     }
 
     @Override
     public void clear() {
-        store = new Store();
+        store = null;
     }
 
     @Override
     public void addAll(Collection<Store> collection) {
-        if (!collection.isEmpty()) {
+        if (collection != null && !collection.isEmpty()) {
             store = collection.iterator().next();
         }
     }

@@ -45,8 +45,12 @@ public class FreePromotionNotice implements Notice {
         return freeBonusQuantity;
     }
 
-    @Override
-    public FreePromotionNotice clone() {
-        return new FreePromotionNotice(noticeType, target, buyQuantity, freeBonusQuantity);
+    public static FreePromotionNotice copyOf(FreePromotionNotice notice) {
+        return new FreePromotionNotice(
+            notice.noticeType,
+            notice.target,
+            notice.buyQuantity,
+            notice.freeBonusQuantity
+        );
     }
 }

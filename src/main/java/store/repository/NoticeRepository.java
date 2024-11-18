@@ -39,7 +39,7 @@ public class NoticeRepository implements Repository<Notice> {
     @Override
     public Collection<Notice> getCopiedCollection() {
         return db.values().stream()
-            .map(Notice::clone)
+            .map(Notice::copyOf)
             .toList();
     }
 
@@ -50,6 +50,8 @@ public class NoticeRepository implements Repository<Notice> {
 
     @Override
     public void addAll(Collection<Notice> collection) {
-        collection.forEach(content -> db.put(content.getId(), content));
+        if (collection != null && !collection.isEmpty()) {
+            collection.forEach(content -> db.put(content.getId(), content));
+        }
     }
 }

@@ -21,9 +21,12 @@ public class StoreController {
     private final NoticeRepository noticeRepository = new NoticeRepository();
     private final CustomerRepository customerRepository = new CustomerRepository();
 
-    public StoreController(OutputView outputView, StoreService storeService, TransactionTemplate transactionTemplate) {
+    {
+        storeService = new StoreService(noticeRepository, storeRepository, customerRepository);
+    }
+
+    public StoreController(OutputView outputView,TransactionTemplate transactionTemplate) {
         this.outputView = outputView;
-        this.storeService = storeService;
         this.transactionTemplate = transactionTemplate;
     }
 

@@ -19,17 +19,17 @@ public class CustomerRepository implements Repository<Customer> {
 
     @Override
     public Collection<Customer> getCopiedCollection() {
-        return List.of(customer.clone());
+        return List.of(Customer.copyOf(customer));
     }
 
     @Override
     public void clear() {
-        customer = new Customer();
+        customer = null;
     }
 
     @Override
     public void addAll(Collection<Customer> collection) {
-        if (!collection.isEmpty()) {
+        if (collection != null && !collection.isEmpty()) {
             customer = collection.iterator().next();
         }
     }

@@ -6,15 +6,13 @@ import static store.domain.notice.NoticeType.CAN_GET_FREE_BONUS;
 import store.domain.store.Stock;
 import store.exception.state.InvalidNoticeTypeException;
 
-public interface Notice extends Cloneable {
+public interface Notice {
 
     void save(int id);
 
     Integer getId();
 
     NoticeType getType();
-
-    Notice clone();
 
     static Notice of(NoticeType noticeType, Stock stock, int quantity) {
         if (noticeType == CAN_GET_FREE_BONUS) {
@@ -27,6 +25,16 @@ public interface Notice extends Cloneable {
         int totalQuantity, int noPromotionQuantity) {
         if (noticeType == CANT_PROMOTION_SOME_STOCKS) {
             return new CantPromotionNotice(noticeType, onPromotionStock, noPromotionStock, totalQuantity, noPromotionQuantity);
+        }
+        throw new InvalidNoticeTypeException();
+    }
+
+    static Notice copyOf(Notice notice) {
+        if (notice.getType().equals(CAN_GET_FREE_BONUS)) {
+            return FreePromotionNotice.copyOf((FreePromotionNotice)notice);
+        }
+        if (notice.getType().equals(CANT_PROMOTION_SOME_STOCKS)) {
+            return CantPromotionNotice.copyOf((CantPromotionNotice)notice);
         }
         throw new InvalidNoticeTypeException();
     }
