@@ -1,10 +1,14 @@
 package store.controller;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import store.dto.NoticeResponse;
+import store.repository.CustomerRepository;
+import store.repository.NoticeRepository;
+import store.repository.StoreRepository;
 import store.service.StoreService;
+import store.util.TransactionTemplate;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -12,10 +16,18 @@ public class StoreController {
 
     private final OutputView outputView;
     private final StoreService storeService;
+    private final TransactionTemplate transactionTemplate;
+    private final StoreRepository storeRepository = new StoreRepository();
+    private final NoticeRepository noticeRepository = new NoticeRepository();
+    private final CustomerRepository customerRepository = new CustomerRepository();
 
-    public StoreController(OutputView outputView, StoreService storeService) {
+    {
+        storeService = new StoreService(noticeRepository, storeRepository, customerRepository);
+    }
+
+    public StoreController(OutputView outputView,TransactionTemplate transactionTemplate) {
         this.outputView = outputView;
-        this.storeService = storeService;
+        this.transactionTemplate = transactionTemplate;
     }
 
     public void run() {
@@ -32,6 +44,9 @@ public class StoreController {
     }
 
     private void preSetting() {
+        transactionTemplate.addTarget(storeRepository);
+        transactionTemplate.addTarget(noticeRepository);
+        transactionTemplate.addTarget(customerRepository);
         storeService.preSetting();
     }
 
@@ -77,7 +92,7 @@ public class StoreController {
 
     private void process(Runnable action) {
         try {
-            action.run();
+            transactionTemplate.execute(action);
         } catch (IllegalArgumentException e) {
             outputView.exception(e);
             process(action);
@@ -86,16 +101,16 @@ public class StoreController {
 
     private <T> void process(Consumer<T> action, T arg) {
         try {
-            action.accept(arg);
+            transactionTemplate.execute(action, arg);
         } catch (IllegalArgumentException e) {
             outputView.exception(e);
             process(action, arg);
         }
     }
 
-    private boolean processAndGet(Supplier<Boolean> action) {
+    private boolean processAndGet(BooleanSupplier action) {
         try {
-            return action.get();
+            return transactionTemplate.executeAndGet(action);
         } catch (IllegalArgumentException e) {
             outputView.exception(e);
             return processAndGet(action);

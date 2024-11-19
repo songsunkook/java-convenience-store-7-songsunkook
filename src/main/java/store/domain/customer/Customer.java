@@ -118,4 +118,13 @@ public class Customer {
     public int getMembershipDiscount() {
         return membership.getDiscount(getTotalPrice() - getPromotionTotalPrice());
     }
+
+    public static Customer copyOf(Customer customer) {
+        if (customer == null) {
+            return null;
+        }
+        Customer clone = new Customer();
+        clone.useMembership(customer.membership.inUse());
+        return clone;
+    }
 }

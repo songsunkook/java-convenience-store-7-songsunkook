@@ -1,5 +1,6 @@
 package store.domain.store;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import store.domain.customer.Customer;
@@ -36,5 +37,15 @@ public class Store {
 
     public List<Promotion> getPromotions() {
         return promotions.get();
+    }
+
+    public static Store copyOf(Store store) {
+        if (store == null) {
+            return null;
+        }
+        Store clone = new Store();
+        store.stocks.get().forEach(stock -> clone.addStock(Stock.copyOf(stock)));
+        clone.addPromotions(new ArrayList<>(store.promotions.get()));
+        return clone;
     }
 }

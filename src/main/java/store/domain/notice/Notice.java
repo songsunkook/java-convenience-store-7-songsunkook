@@ -28,4 +28,17 @@ public interface Notice {
         }
         throw new InvalidNoticeTypeException();
     }
+
+    static Notice copyOf(Notice notice) {
+        if (notice == null) {
+            return null;
+        }
+        if (notice.getType().equals(CAN_GET_FREE_BONUS)) {
+            return FreePromotionNotice.copyOf((FreePromotionNotice)notice);
+        }
+        if (notice.getType().equals(CANT_PROMOTION_SOME_STOCKS)) {
+            return CantPromotionNotice.copyOf((CantPromotionNotice)notice);
+        }
+        throw new InvalidNoticeTypeException();
+    }
 }

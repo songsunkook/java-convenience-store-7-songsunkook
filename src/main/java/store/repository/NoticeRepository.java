@@ -1,12 +1,13 @@
 package store.repository;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import store.domain.customer.Customer;
 import store.domain.notice.Notice;
 
-public class NoticeRepository {
+public class NoticeRepository implements Repository<Notice> {
 
     private static final int DEFAULT_AUTO_INCREMENT = 1;
 
@@ -33,5 +34,24 @@ public class NoticeRepository {
 
     public void saveAllByCustomer(Customer customer) {
         customer.getNotices().forEach(this::save);
+    }
+
+    @Override
+    public Collection<Notice> getCopiedCollection() {
+        return db.values().stream()
+            .map(Notice::copyOf)
+            .toList();
+    }
+
+    @Override
+    public void clear() {
+        db.clear();
+    }
+
+    @Override
+    public void addAll(Collection<Notice> collection) {
+        if (collection != null && !collection.isEmpty()) {
+            collection.forEach(content -> db.put(content.getId(), content));
+        }
     }
 }

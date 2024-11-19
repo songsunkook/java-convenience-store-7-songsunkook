@@ -67,4 +67,16 @@ public class Stock {
     public boolean isEmpty() {
         return quantity == EMPTY_QUANTITY;
     }
+
+    public static Stock copyOf(Stock stock) {
+        if (stock == null) {
+            return null;
+        }
+        return new Stock(
+            stock.getName(),
+            stock.getPrice(),
+            stock.getQuantity(),
+            stock.getPromotion()
+        );
+    }
 }

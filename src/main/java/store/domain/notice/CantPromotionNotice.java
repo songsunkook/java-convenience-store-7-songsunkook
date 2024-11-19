@@ -12,7 +12,8 @@ public class CantPromotionNotice implements Notice {
 
     private Integer id;
 
-    public CantPromotionNotice(NoticeType noticeType, Stock onPromotionStock, Stock noPromotionStock, int orderedTotalQuantity,
+    public CantPromotionNotice(NoticeType noticeType, Stock onPromotionStock, Stock noPromotionStock,
+        int orderedTotalQuantity,
         int orderedNoPromotionQuantity) {
         this.noticeType = noticeType;
         this.onPromotionStock = onPromotionStock;
@@ -58,5 +59,18 @@ public class CantPromotionNotice implements Notice {
 
     public int getOrderedOnPromotionQuantity() {
         return orderedTotalQuantity - orderedNoPromotionQuantity;
+    }
+
+    public static CantPromotionNotice copyOf(CantPromotionNotice notice) {
+        if (notice == null) {
+            return null;
+        }
+        return new CantPromotionNotice(
+            notice.noticeType,
+            notice.onPromotionStock,
+            notice.noPromotionStock,
+            notice.orderedTotalQuantity,
+            notice.orderedNoPromotionQuantity
+        );
     }
 }

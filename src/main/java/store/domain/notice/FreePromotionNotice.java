@@ -44,4 +44,16 @@ public class FreePromotionNotice implements Notice {
     public int getFreeBonusQuantity() {
         return freeBonusQuantity;
     }
+
+    public static FreePromotionNotice copyOf(FreePromotionNotice notice) {
+        if (notice == null) {
+            return null;
+        }
+        return new FreePromotionNotice(
+            notice.noticeType,
+            notice.target,
+            notice.buyQuantity,
+            notice.freeBonusQuantity
+        );
+    }
 }

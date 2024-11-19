@@ -16,15 +16,32 @@ import store.util.FileParser;
 
 public class StoreService {
 
-    private final NoticeRepository noticeRepository = new NoticeRepository();
-    private final StoreRepository storeRepository = new StoreRepository();
-    private final CustomerRepository customerRepository = new CustomerRepository();
+    private final NoticeRepository noticeRepository;
+    private final StoreRepository storeRepository;
+    private final CustomerRepository customerRepository;
+    // 롤백 확인용 코드
+    // private boolean flag = true;
+
+    public StoreService(NoticeRepository noticeRepository, StoreRepository storeRepository,
+        CustomerRepository customerRepository) {
+        this.noticeRepository = noticeRepository;
+        this.storeRepository = storeRepository;
+        this.customerRepository = customerRepository;
+    }
 
     public void preSetting() {
         Store store = storeRepository.get();
         store.addPromotions(FileParser.readPromotions());
         FileParser.readStocks(store.getPromotions()).forEach(store::addStock);
         store.prepareOpen();
+/*
+        // 롤백 확인용 코드
+        if (flag) {
+            storeRepository.clear();
+            flag = false;
+            throw new IllegalArgumentException();
+        }
+*/
     }
 
     public void newCustomer() {
@@ -39,7 +56,6 @@ public class StoreService {
     public void order(List<OrderRequest> orders) {
         Store store = storeRepository.get();
         Customer customer = customerRepository.get();
-        orders.forEach(request -> store.validateStocks(request.name(), request.quantity()));
         orders.forEach(request -> store.buy(customer, request.name(), request.quantity()));
         noticeRepository.saveAllByCustomer(customer);
     }
