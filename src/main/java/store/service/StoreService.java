@@ -19,6 +19,8 @@ public class StoreService {
     private final NoticeRepository noticeRepository;
     private final StoreRepository storeRepository;
     private final CustomerRepository customerRepository;
+    // 롤백 확인용 코드
+    // private boolean flag = true;
 
     public StoreService(NoticeRepository noticeRepository, StoreRepository storeRepository,
         CustomerRepository customerRepository) {
@@ -32,6 +34,14 @@ public class StoreService {
         store.addPromotions(FileParser.readPromotions());
         FileParser.readStocks(store.getPromotions()).forEach(store::addStock);
         store.prepareOpen();
+/*
+        // 롤백 확인용 코드
+        if (flag) {
+            storeRepository.clear();
+            flag = false;
+            throw new IllegalArgumentException();
+        }
+*/
     }
 
     public void newCustomer() {
