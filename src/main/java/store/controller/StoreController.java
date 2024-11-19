@@ -1,7 +1,7 @@
 package store.controller;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import store.dto.NoticeResponse;
 import store.repository.CustomerRepository;
@@ -108,7 +108,7 @@ public class StoreController {
         }
     }
 
-    private boolean processAndGet(Supplier<Boolean> action) {
+    private boolean processAndGet(BooleanSupplier action) {
         try {
             return transactionTemplate.executeAndGet(action);
         } catch (IllegalArgumentException e) {
